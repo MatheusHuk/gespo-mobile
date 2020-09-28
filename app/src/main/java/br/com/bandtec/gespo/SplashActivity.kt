@@ -2,8 +2,6 @@ package br.com.bandtec.gespo
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
-import kotlin.concurrent.schedule
 
 class SplashActivity : AppCompatActivity() {
     val valor = 1;
@@ -16,7 +14,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun check(){
         if(this.valor === 1){
-            setContentView(R.layout.activity_main)
+            setContentView(R.layout.activity_login)
         }
     }
 }
