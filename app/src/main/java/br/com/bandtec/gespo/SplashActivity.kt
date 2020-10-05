@@ -11,12 +11,15 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash)
-        //check();
+        check();
     }
 
     private fun check(){
         if(this.valor === 1){
-            setContentView(R.layout.activity_login)
+            Handler().postDelayed({
+                val loginActivity = Intent(this, LoginActivity::class.java)
+                startActivity(loginActivity)
+            }, 5000)
         }
     }
 }
