@@ -2,6 +2,7 @@ package br.com.bandtec.gespo
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -15,8 +16,10 @@ class SplashActivity : AppCompatActivity() {
 
     private fun check(){
         if(this.valor === 1){
-            val main = Intent(this, MainActivity::class.java)
-            startActivity(main)
+            Handler().postDelayed({
+                val loginActivity = Intent(this, LoginActivity::class.java)
+                startActivity(loginActivity)
+            }, 5000)
         }
     }
 }
