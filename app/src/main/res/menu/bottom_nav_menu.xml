@@ -4,6 +4,11 @@
     >
 
     <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Dashboards" />
+
+    <item
         android:id="@+id/navigation_timer"
         android:icon="@drawable/ic_alarm"
         android:title="Timer" />
@@ -12,10 +17,5 @@
         android:id="@+id/navigation_apontamentos"
         android:icon="@drawable/ic_apontamentos"
         android:title="Apontamentos" />
-
-    <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_profile"
-        android:title="Perfil" />
 
 </menu>

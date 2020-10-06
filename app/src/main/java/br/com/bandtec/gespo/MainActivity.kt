@@ -8,35 +8,21 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import br.com.bandtec.gespo.utils.changeActivity
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView.selectedItemId = R.id.navigation_dashboard
+
         navView.setOnNavigationItemSelectedListener(
-            BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                when(item.itemId){
-                    R.id.navigation_timer -> {
-                        val timerView = Intent(this, SplashActivity::class.java)
-                        startActivity(timerView)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navigation_apontamentos -> {
-                        val apontamentosView = Intent(this, LoginActivity::class.java)
-                        startActivity(apontamentosView)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navigation_profile -> {
-                        val profileView = Intent(this, LoginActivity::class.java)
-                        startActivity(profileView)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    else -> {
-                        return@OnNavigationItemSelectedListener false
-                    }
-                }
-            })
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            changeActivity(item ,this.applicationContext)
+            return@OnNavigationItemSelectedListener true
+        })
     }
 }

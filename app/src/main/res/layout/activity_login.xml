@@ -62,6 +62,7 @@
         android:text="Login"
         android:textSize="15sp"
         android:textColor="#FFFFFF"
+        android:onClick="goToMain"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
