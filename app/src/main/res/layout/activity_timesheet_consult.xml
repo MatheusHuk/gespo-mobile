@@ -6,6 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".activity_timesheet_consult">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/v_top_menu"
+        android:background="@color/primaryLightGrey">
+
+        <ImageView
+            android:src="@mipmap/gespo"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="12dp"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         app:itemBackground="@color/primaryLightGrey"
         app:itemIconTint="@color/item_color_selector"
@@ -21,16 +48,97 @@
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
+
+
+    <ImageView
+        android:id="@+id/iv_gespo_timer"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="15dp"
+        app:layout_editor_absoluteX="100dp"
+        android:src="@drawable/ic_alarm"
+        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+        android:contentDescription="icon of clock"
+        tools:ignore="MissingConstraints"
+        />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:gravity="center"
+        android:text="Apontamentos"
+        android:textSize="22sp"
+        android:textColor="#000000"
+        android:layout_marginTop="15dp"
+        android:id="@+id/tv_apontamentos"
+        />
+
+    <ImageView
+        android:id="@+id/iv_gespo_config"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_editor_absoluteX="340dp"
+        android:src="@mipmap/config"
+        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+        tools:ignore="MissingConstraints"
+        />
+
+    <ImageView
+        android:id="@+id/iv_gespo_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="20dp"
+        android:src="@mipmap/plus"
+        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+        tools:ignore="MissingConstraints"
+        />
+
+    <ImageView
+        android:id="@+id/iv_gespo_line"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_editor_absoluteX="20dp"
+        android:src="@mipmap/line"
+        app:layout_constraintTop_toBottomOf="@id/tv_apontamentos"
+        android:contentDescription="A linha vertical"
+        tools:ignore="MissingConstraints"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:gravity="center"
+        android:text="Detalhes"
+        android:textSize="22sp"
+        android:textColor="#000000"
+        android:layout_marginTop="15dp"
+        android:id="@+id/tv_txt_detalhes"
+        />
+
+
     <TableLayout
         android:layout_width="409dp"
-        android:layout_height="729dp"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp"
-        android:stretchColumns="0,1,2,3">
+        android:stretchColumns="0,1,2,3"
+        app:layout_constraintTop_toBottomOf="@id/tv_txt_detalhes"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
+        android:layout_marginTop="15dp">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,7 +175,48 @@
                 android:textSize="18sp"
                 android:layout_gravity="center"
                 android:id="@+id/tv_detalhes"/>
+        </TableRow>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Projeto Teste"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="07/10/2020"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalhes"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                />
         </TableRow>
 
     </TableLayout>
