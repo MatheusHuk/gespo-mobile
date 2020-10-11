@@ -3,10 +3,7 @@ package br.com.bandtec.gespo.utils
 import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
-import br.com.bandtec.gespo.LoginActivity
-import br.com.bandtec.gespo.MainActivity
-import br.com.bandtec.gespo.R
-import br.com.bandtec.gespo.SplashActivity
+import br.com.bandtec.gespo.*
 
 fun changeActivity(item:MenuItem, activity:Context){
     when(item.itemId){
@@ -21,7 +18,7 @@ fun changeActivity(item:MenuItem, activity:Context){
             activity.startActivity(timerView)
         }
         R.id.navigation_apontamentos -> {
-            val apontamentosView = Intent(activity, LoginActivity::class.java)
+            val apontamentosView = Intent(activity, activity_timesheet_consult::class.java)
             apontamentosView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(apontamentosView)
         }
