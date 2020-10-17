@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_alarm"
-        android:title="Timer" />
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="Apontamentos" />
+        android:title="Dashboards" />
 
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="Perfil" />
+        android:id="@+id/navigation_timer"
+        android:icon="@drawable/ic_alarm"
+        android:title="Timer" />
+
+    <item
+        android:id="@+id/navigation_apontamentos"
+        android:icon="@drawable/ic_apontamentos"
+        android:title="Apontamentos" />
 
 </menu>
