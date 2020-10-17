@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_detailofnote">
+    tools:context=".activity_timesheet_consult">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:id="@+id/v_top_menu"
-        android:background="@color/primaryLightGrey"
-        tools:ignore="MissingConstraints">
+        android:background="@color/primaryLightGrey">
 
         <ImageView
             android:src="@mipmap/gespo"
@@ -36,6 +35,8 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         app:itemBackground="@color/primaryLightGrey"
+        app:itemIconTint="@color/item_color_selector"
+        app:itemTextColor="@color/item_color_selector"
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -126,14 +127,13 @@
 
 
     <TableLayout
-        android:id="@+id/tl_table"
         android:layout_width="409dp"
-        android:layout_height="350dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp"
         android:stretchColumns="0,1,2,3"
         app:layout_constraintTop_toBottomOf="@id/tv_txt_detalhes"
-        app:layout_constraintBottom_toTopOf="@+id/cl_baixo"
-        android:layout_marginTop="15dp"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
+        android:layout_marginTop="15dp">
 
         <TableRow
             android:layout_width="match_parent"
@@ -170,7 +170,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ações"
+                android:text="Detalhes"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:layout_gravity="center"
@@ -185,7 +185,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Projeto Gespo"
+                android:text="Projeto Teste"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:layout_gravity="center"
@@ -194,7 +194,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="01/01/2020"
+                android:text="07/10/2020"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:layout_gravity="center"
@@ -203,7 +203,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20"
+                android:text="8"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:layout_gravity="center"
@@ -212,39 +212,12 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Editar"
+                android:text="Detalhes"
                 android:textColor="#000000"
                 android:textSize="12sp"
                 android:layout_gravity="center"
                 />
-
-
-           <ImageButton
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:src="@mipmap/iconexcluir"/>
         </TableRow>
 
     </TableLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="40dp"
-        android:id="@+id/cl_baixo"
-        android:background="@color/primaryLightBlue"
-        app:layout_constraintBottom_toTopOf="@id/nav_view">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="250dp"
-            android:text="Total de horas"/>
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
