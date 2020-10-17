@@ -220,7 +220,7 @@
            <ImageButton
                android:layout_width="match_parent"
                android:layout_height="match_parent"
-               android:src="@mipmap/iconExcluir"/>
+               android:src="@mipmap/iconexcluir"/>
         </TableRow>
 
     </TableLayout>
