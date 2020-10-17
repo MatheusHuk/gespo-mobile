@@ -260,12 +260,14 @@
 
     <TableLayout
         android:layout_width="409dp"
+        android:layout_height="match_parent"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp"
         android:stretchColumns="0,1,2,3"
         app:layout_constraintTop_toBottomOf="@id/tv_txt_detalhes"
         app:layout_constraintBottom_toTopOf="@+id/nav_view"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="405dp"
+        android:layout_marginBottom="55dp">
 
         <TableRow
             android:layout_width="match_parent"
