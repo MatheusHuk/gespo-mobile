@@ -4,15 +4,56 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import br.com.bandtec.gespo.model.Employee
+import br.com.bandtec.gespo.requests.AuthRequest
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_login.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
+
+    val api = Retrofit.Builder()
+        .baseUrl("https://gespo-rest.azurewebsites.net/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val employeeRequests = api.create(AuthRequest::class.java)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        Glide.with(this)
+            .load(R.mipmap.ring) // aqui é teu gif
+            .asGif()
+            .into(loadingImage);
     }
 
-    fun goToMain(v: View){
-        val mainActivity = Intent(this, MainActivity::class.java)
-        startActivity(mainActivity)
+    fun login(v: View){
+
+        loading.visibility = View.VISIBLE
+        val cpf = et_cpf.text.toString()
+        val pass = et_senha.text.toString()
+        
+        val login = employeeRequests.login(cpf, pass)
+        
+        login.enqueue(object : Callback<Employee> {
+            override fun onFailure(call: Call<Employee>, t: Throwable) {
+                Toast.makeText(applicationContext, "ERRO", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
+                response.isSuccessful
+                Toast.makeText(applicationContext,
+                    "${response.code()} | LOGADO: ${response.body()?.name} - ${response.body()?.email}",
+                    Toast.LENGTH_SHORT).show()
+                val mainActivity = Intent(applicationContext, MainActivity::class.java)
+                startActivity(mainActivity)
+            }
+        })
     }
 }
