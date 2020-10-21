@@ -34,7 +34,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="20dp"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- contador -->
         <TextView
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:id="@+id/cronometro"
+            android:id="@+id/contador"
             android:text="00:00:00"
             android:textColor="#2E6CA4"
             android:textSize="50sp"
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fab_play"
-            app:layout_constraintTop_toBottomOf="@id/cronometro"
+            app:layout_constraintTop_toBottomOf="@id/contador"
             android:src="@drawable/ic_start"
             app:fabSize="mini"
             android:backgroundTint="#2E6CA4"
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fab_pause"
-            app:layout_constraintTop_toBottomOf="@id/cronometro"
+            app:layout_constraintTop_toBottomOf="@id/contador"
             android:src="@drawable/ic_pause"
             app:fabSize="mini"
             android:backgroundTint="#2E6CA4"
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fab_stop"
-            app:layout_constraintTop_toBottomOf="@id/cronometro"
+            app:layout_constraintTop_toBottomOf="@id/contador"
             android:src="@drawable/ic_stop"
             app:fabSize="mini"
             android:backgroundTint="#2E6CA4"
@@ -137,7 +137,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:gravity="center"
-            android:text="Cronômetro"
+            android:text="Contador"
             android:textSize="22sp"
             android:textColor="#000000"
             android:layout_marginTop="20dp"
@@ -167,7 +167,6 @@
             app:layout_editor_absoluteX="20dp"
             android:src="@mipmap/line"
             app:layout_constraintTop_toBottomOf="@id/tv_timer"
-            android:contentDescription="A linha vertical"
             tools:ignore="MissingConstraints"
             />
 
