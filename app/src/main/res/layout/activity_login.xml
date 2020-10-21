@@ -24,7 +24,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="45dp"
-        android:src="@mipmap/logologin"
+        android:src="@mipmap/logoologin"
         android:id="@+id/iv_gespo_Logo_escrita"
         />
     
