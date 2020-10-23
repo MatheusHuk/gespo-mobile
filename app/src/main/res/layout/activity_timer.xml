@@ -110,6 +110,17 @@
         />
 
     <!-- title page -->
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sp_options"
+        android:entries="@array/options"
+        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="18dp"
+        />
+
     <TextView
         android:layout_width="130dp"
         android:layout_height="30dp"
