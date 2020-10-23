@@ -11,7 +11,6 @@ class TimerActivity : AppCompatActivity(){
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer)
-        check();
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_timer
