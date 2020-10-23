@@ -17,6 +17,10 @@
             android:name=".LoginActivity"
             android:label="LoginActivity">
         </activity>
+        <activity
+            android:name=".activity_detailofnote"
+            android:label="activity_detailofnote">
+        </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
