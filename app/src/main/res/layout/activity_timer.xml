@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".TimerActivity">
 
-    <!-- Menu de cima -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -23,6 +22,7 @@
             tools:layout_editor_absoluteY="18dp" />
 
         <!-- button power -->
+  
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,40 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- cronometro -->
+    <ImageView
+        android:id="@+id/iv_gespo_timer"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="15dp"
+        app:layout_editor_absoluteX="100dp"
+        android:src="@drawable/ic_alarm"
+        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+        android:contentDescription="icon of clock"
+        tools:ignore="MissingConstraints"
+        />
+    
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sp_options"
+        android:entries="@array/options"
+        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="18dp"/>
+
+    <ImageView
+        android:id="@+id/iv_gespo_line"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_editor_absoluteX="20dp"
+        android:src="@mipmap/line"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_timer"
+        android:contentDescription="A linha vertical"
+        tools:ignore="MissingConstraints"
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +82,6 @@
         android:layout_marginTop="200dp"
         android:gravity="center"/>
 
-    <!-- BOTAO ESQ -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,7 +93,6 @@
         app:layout_editor_absoluteX="115dp"
         android:layout_marginTop="10dp"/>
 
-    <!-- BOTAO MEIO -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,7 +104,6 @@
         app:layout_editor_absoluteX="187dp"
         android:layout_marginTop="10dp"/>
 
-    <!-- BOTAO DIREITA -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -165,7 +195,6 @@
 
     <!-- Menu de baixo -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-
         app:itemBackground="@color/primaryLightGrey"
         app:itemIconTint="@color/item_color_selector"
         app:itemTextColor="@color/item_color_selector"
@@ -181,4 +210,3 @@
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
