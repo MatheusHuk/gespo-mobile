@@ -25,7 +25,6 @@ class TimesheetConsultActivity : AppCompatActivity() {
             R.layout.support_simple_spinner_dropdown_item,
             resources.getStringArray(R.array.periodos))
 
-
             val s= mutableListOf<String>()
 
             s.add("projeto 1")
