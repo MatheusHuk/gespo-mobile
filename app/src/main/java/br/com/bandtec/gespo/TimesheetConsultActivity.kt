@@ -25,9 +25,15 @@ class TimesheetConsultActivity : AppCompatActivity() {
             R.layout.support_simple_spinner_dropdown_item,
             resources.getStringArray(R.array.periodos))
 
+            val s= mutableListOf<String>()
+
+            s.add("projeto 1")
+            s.add("projeto 2")
+            s.add("projeto 3")
+
             sp_projeto.adapter = ArrayAdapter(this,
             R.layout.support_simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.periodos))
+            s)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_apontamentos
@@ -52,18 +58,20 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
             //ajustando o table layout na tela para se adequar as mudanças
             //criando uma variável do tipo Layout Params
-            params.topMargin = 290
+            params.topMargin = TypedValue.COMPLEX_UNIT_DIP *290
             tl_tabela_consulta.layoutParams = params
 
             tl_tabela_consulta.invalidate()
             tl_tabela_consulta.requestLayout()
+
+            tv_txt_detalhes.visibility = View.VISIBLE
 
             estadoFiltro = false
         }
         else{
         //ajustando o table layout na tela para se adequar as mudanças
         //criando uma variável do tipo Layout Params
-        params.topMargin = 590
+        params.topMargin = TypedValue.COMPLEX_UNIT_DIP * 510
         tl_tabela_consulta.layoutParams = params
 
         tl_tabela_consulta.invalidate()
@@ -76,6 +84,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
         //tornando a linha invisível para se adequar a estilização do app
         iv_gespo_line.visibility = View.GONE
 
+            tv_txt_detalhes.visibility = View.GONE
             estadoFiltro = true
 
         }
