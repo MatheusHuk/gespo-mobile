@@ -18,7 +18,8 @@ fun changeActivity(item:MenuItem, activity:Context){
             activity.startActivity(timerView)
         }
         R.id.navigation_apontamentos -> {
-            val apontamentosView = Intent(activity, activity_timesheet_consult::class.java)
+
+            val apontamentosView = Intent(activity, TimesheetConsultActivity::class.java)
             apontamentosView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(apontamentosView)
         }
