@@ -6,16 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_timer.*
+import kotlinx.android.synthetic.main.activity_timesheet_consult.*
 
-class TimerActivity : AppCompatActivity(){
+class CounterActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timer)
+        setContentView(R.layout.activity_counter)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        navView.selectedItemId = R.id.navigation_timer
+        navView.selectedItemId = R.id.navigation_apontamentos
 
         //esse é o código do spinner
         //ele ta puxando lá do arquivo strings.xml as opções
