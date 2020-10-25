@@ -52,6 +52,7 @@ class LoginActivity : AppCompatActivity() {
                     "${response.code()} | LOGADO: ${response.body()?.name} - ${response.body()?.email}",
                     Toast.LENGTH_SHORT).show()
                 val mainActivity = Intent(applicationContext, MainActivity::class.java)
+                mainActivity.putExtra("username", response.body()?.name.toString())
                 startActivity(mainActivity)
             }
         })

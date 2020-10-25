@@ -31,9 +31,14 @@ import java.text.AttributedCharacterIterator
 
 class MainActivity : AppCompatActivity() {
 
+    var nome:String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        nome = intent.extras?.get("username").toString()
+        tv_username.text = nome
 
         val c:ColorTemplate = ColorTemplate()
 
