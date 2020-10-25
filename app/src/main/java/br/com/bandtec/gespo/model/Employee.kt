@@ -5,5 +5,6 @@ data class Employee(
     val name:String,
     val password:String,
     val email:String,
-    val hourValue:Double
+    val hourValue:Double,
+    val office:Office
 )
