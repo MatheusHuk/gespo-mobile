@@ -1,6 +1,7 @@
 package br.com.bandtec.gespo
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.utils.changeActivity
@@ -28,5 +29,9 @@ class TimerActivity : AppCompatActivity(){
                 changeActivity(item ,this.applicationContext)
                 return@OnNavigationItemSelectedListener true
             })
+    }
+
+    fun abrirFiltro(v: View){
+
     }
 }

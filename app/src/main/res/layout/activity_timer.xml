@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:id="@+id/v_top_menu"
-        android:background="@color/primaryLightGrey" >
+        android:background="@color/primaryLightGrey"
+        tools:ignore="MissingConstraints">
 
         <!-- logo gespo -->
         <ImageView
@@ -33,28 +34,6 @@
             android:layout_marginRight="20dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/iv_gespo_timer"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="15dp"
-        app:layout_editor_absoluteX="100dp"
-        android:src="@drawable/ic_alarm"
-        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
-        android:contentDescription="icon of clock"
-        tools:ignore="MissingConstraints"
-        />
-    
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sp_options"
-        android:entries="@array/options"
-        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="18dp"/>
 
     <ImageView
         android:id="@+id/iv_gespo_line"
@@ -91,7 +70,8 @@
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
         app:layout_editor_absoluteX="115dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
@@ -102,7 +82,8 @@
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
         app:layout_editor_absoluteX="187dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
@@ -113,7 +94,8 @@
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
         app:layout_editor_absoluteX="258dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        tools:ignore="MissingConstraints" />
 
     <!-- text help -->
     <TextView
@@ -139,7 +121,8 @@
         tools:ignore="MissingConstraints"
         />
 
-    <!-- title page -->
+    <!-- title page Spinner -->
+
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -148,22 +131,7 @@
         app:layout_constraintTop_toBottomOf="@id/v_top_menu"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="18dp"
-        />
-
-    <TextView
-        android:layout_width="130dp"
-        android:layout_height="30dp"
-        android:id="@+id/tv_timer"
-        app:layout_constraintTop_toBottomOf="@id/v_top_menu"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:gravity="center"
-        android:text="Cronômetro"
-        android:textSize="22sp"
-        android:textColor="#000000"
-        android:layout_marginTop="20dp"
-        />
+        android:layout_marginTop="18dp"/>
 
     <!-- button filter -->
     <ImageButton
@@ -177,19 +145,6 @@
         android:onClick="abrirFiltro"
         android:src="@mipmap/config"
         app:layout_constraintTop_toBottomOf="@id/v_top_menu"
-        tools:ignore="MissingConstraints"
-        />
-
-    <!-- line -->
-    <ImageView
-        android:id="@+id/iv_gespo_line"
-        android:layout_width="370dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        app:layout_editor_absoluteX="20dp"
-        android:src="@mipmap/line"
-        app:layout_constraintTop_toBottomOf="@id/tv_timer"
-        android:contentDescription="A linha vertical"
         tools:ignore="MissingConstraints"
         />
 
