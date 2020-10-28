@@ -13,12 +13,11 @@ fun changeActivity(item:MenuItem, activity:Context){
             activity.startActivity(dashboardView)
         }
         R.id.navigation_timer -> {
-            val timerView = Intent(activity, SplashActivity::class.java)
+            val timerView = Intent(activity, TimerActivity::class.java)
             timerView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(timerView)
         }
         R.id.navigation_apontamentos -> {
-
             val apontamentosView = Intent(activity, TimesheetConsultActivity::class.java)
             apontamentosView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(apontamentosView)

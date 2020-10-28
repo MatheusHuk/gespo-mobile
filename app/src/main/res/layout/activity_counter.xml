@@ -61,7 +61,8 @@
             app:fabSize="mini"
             android:backgroundTint="#2E6CA4"
             app:layout_editor_absoluteX="115dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            tools:ignore="MissingConstraints" />
 
         <!-- BOTAO MEIO -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -73,7 +74,8 @@
             app:fabSize="mini"
             android:backgroundTint="#2E6CA4"
             app:layout_editor_absoluteX="187dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            tools:ignore="MissingConstraints" />
 
         <!-- BOTAO DIREITA -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -85,7 +87,8 @@
             app:fabSize="mini"
             android:backgroundTint="#2E6CA4"
             app:layout_editor_absoluteX="258dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            tools:ignore="MissingConstraints" />
 
         <!-- Menu de baixo -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -128,20 +131,16 @@
             tools:ignore="MissingConstraints"
             />
 
-        <!-- title page -->
-        <TextView
-            android:layout_width="130dp"
-            android:layout_height="30dp"
-            android:id="@+id/tv_timer"
+        <!-- title page Spinner -->
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sp_options"
+            android:entries="@array/options"
             app:layout_constraintTop_toBottomOf="@id/v_top_menu"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:gravity="center"
-            android:text="Contador"
-            android:textSize="22sp"
-            android:textColor="#000000"
-            android:layout_marginTop="20dp"
-            />
+            android:layout_marginTop="18dp"/>
 
         <!-- button filter -->
         <ImageButton
@@ -166,7 +165,7 @@
             android:layout_marginTop="15dp"
             app:layout_editor_absoluteX="20dp"
             android:src="@mipmap/line"
-            app:layout_constraintTop_toBottomOf="@id/tv_timer"
+            app:layout_constraintTop_toBottomOf="@id/sp_options"
             tools:ignore="MissingConstraints"
             />
 

@@ -1,5 +1,6 @@
 package br.com.bandtec.gespo
 
+import android.content.Intent
 import android.widget.LinearLayout.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -88,6 +89,11 @@ class TimesheetConsultActivity : AppCompatActivity() {
             estadoFiltro = true
 
         }
+    }
+
+    fun goToTimeEntry(v: View){
+        val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
+        startActivity(timeEntryActivity)
     }
 
 }
