@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout.*
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.model.dashboards.ManagerDashOne
@@ -139,7 +140,6 @@ class MainActivity : AppCompatActivity() {
                     LayoutParams.MATCH_PARENT,
                     (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
                 )
-                params.bottomMargin = (applicationContext.getResources().getDisplayMetrics().density * 20).toInt()
 
                 dashOne.layoutParams = params
                 dashOne.data = BarData(barSet)
@@ -148,7 +148,19 @@ class MainActivity : AppCompatActivity() {
                 dashOne.xAxis.labelRotationAngle = 45f
                 dashOne.invalidate()
 
+                val l = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+                )
+                l.bottomMargin = 100
+
+                val textView = TextView(applicationContext)
+                textView.text = "Apontamento X provisionamento em Dinheiro por Projeto"
+                textView.layoutParams = l
+                textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
                 appContainer.addView(dashOne)
+                appContainer.addView(textView)
 
                 callback.invoke(true)
             }
@@ -202,7 +214,6 @@ class MainActivity : AppCompatActivity() {
                     LayoutParams.MATCH_PARENT,
                     (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
                 )
-                params.bottomMargin = (applicationContext.getResources().getDisplayMetrics().density * 20).toInt()
 
                 dashTwo.layoutParams = params
                 dashTwo.data = BarData(barSet)
@@ -211,7 +222,19 @@ class MainActivity : AppCompatActivity() {
                 dashTwo.xAxis.labelRotationAngle = 45f
                 dashTwo.invalidate()
 
+                val l = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+                )
+                l.bottomMargin = 100
+
+                val textView = TextView(applicationContext)
+                textView.text = "Apontamento X provisionamento em Horas por Projeto"
+                textView.layoutParams = l
+                textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
                 appContainer.addView(dashTwo)
+                appContainer.addView(textView)
 
                 callback.invoke(true)
             }
@@ -263,7 +286,6 @@ class MainActivity : AppCompatActivity() {
                     LayoutParams.MATCH_PARENT,
                     (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
                 )
-                params.bottomMargin = (applicationContext.getResources().getDisplayMetrics().density * 20).toInt()
 
                 dashThree.layoutParams = params
                 dashThree.holeRadius = 0f
@@ -275,7 +297,19 @@ class MainActivity : AppCompatActivity() {
                 dashThree.setEntryLabelColor(Color.BLACK)
                 dashThree.invalidate()
 
+                val l = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+                )
+                l.bottomMargin = 100
+
+                val textView = TextView(applicationContext)
+                textView.text = "Quantidade de funcionários por Projeto"
+                textView.layoutParams = l
+                textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
                 appContainer.addView(dashThree)
+                appContainer.addView(textView)
 
                 callback.invoke(true)
             }
