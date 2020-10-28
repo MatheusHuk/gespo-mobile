@@ -1,46 +1,69 @@
 package br.com.bandtec.gespo
 
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
-import android.text.Layout
-import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.LinearLayout.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.size
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import br.com.bandtec.gespo.model.dashboards.ManagerDashOne
+import br.com.bandtec.gespo.model.dashboards.ManagerDashThree
+import br.com.bandtec.gespo.model.dashboards.ManagerDashTwo
+import br.com.bandtec.gespo.requests.AuthRequest
+import br.com.bandtec.gespo.requests.DashRequest
 import br.com.bandtec.gespo.utils.changeActivity
+import com.bumptech.glide.Glide
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
-import android.widget.LinearLayout.LayoutParams
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.view.marginBottom
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.data.*
-import java.text.AttributedCharacterIterator
+import kotlinx.android.synthetic.main.activity_main.loading
+import kotlinx.android.synthetic.main.activity_main.loadingImage
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    val api = Retrofit.Builder()
+        .baseUrl("https://gespo-rest.azurewebsites.net/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val dashApi = Retrofit.Builder()
+        .baseUrl("https://gespo-dash-back.azurewebsites.net/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val dashRequest = dashApi.create(DashRequest::class.java)
+
     var nome:String = ""
+    var id:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Glide.with(this)
+            .load(R.mipmap.ring) // aqui é teu gif
+            .asGif()
+            .into(loadingImage);
 
-        nome = intent.extras?.get("username").toString()
+        //nome = intent.extras?.get("username").toString()
+        //id = intent.extras!!.getInt("id")
+        nome = "Matheus Huk"
+        id = 4
+
         tv_username.text = nome
-
-        val c:ColorTemplate = ColorTemplate()
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_dashboard
@@ -51,127 +74,216 @@ class MainActivity : AppCompatActivity() {
             return@OnNavigationItemSelectedListener true
         })
 
-        //val chartView: PieChart = findViewById(R.id.chart)
-        val entries = ArrayList<PieEntry>(0)
-        //val container: View = findViewById(R.id.appContainer)
+        val employeeRequest = api.create(AuthRequest::class.java)
 
-        //val chartArray: ArrayList<PieChart> = ArrayList<PieChart>()
-        //chartArray.add(PieChart(this))
+        val getUser = employeeRequest.getEmployee(id)
 
-        val chartView: PieChart = PieChart(this)
-        //appContainer.addView(newView)
+        mountManagerDashOne(){ resp ->
+            print("1")
+            mountManagerDashTwo(){ resp ->
+                print("2")
+                mountManagerDashThree(){ resp ->
+                    print("3")
+                    loading.visibility = View.GONE
+                    app_scroll_view.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
 
-        entries.add(PieEntry(50f, "Brazil"))
-        entries.add(PieEntry(75f, "USA"))
-        entries.add(PieEntry(37f, "Germany"))
-        entries.add(PieEntry(37f, "France"))
-        entries.add(PieEntry(37f, "Italy"))
-        entries.add(PieEntry(37f, "Japan"))
-        entries.add(PieEntry(37f, "Mexico"))
-        entries.add(PieEntry(37f, "UK"))
-        entries.add(PieEntry(37f, "Canada"))
-        entries.add(PieEntry(37f, "Australia"))
+    fun mountManagerDashOne(callback: (Boolean) -> Unit){
 
-        val dataSet = PieDataSet(entries, "")
+        //Manager First Dash
+        val getFirstDash = dashRequest.getManagerDashOne()
 
-        dataSet.isVisible = true
-        dataSet.setDrawIcons(true)
-        dataSet.sliceSpace = 3f
-        dataSet.iconsOffset = MPPointF(0F, 40F)
-        dataSet.selectionShift = 5f
-        dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
-        dataSet.valueTextColor = Color.TRANSPARENT
+        getFirstDash.enqueue(object: Callback<ManagerDashOne> {
+            override fun onFailure(call: Call<ManagerDashOne>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
 
-        val data = PieData(dataSet)
+            override fun onResponse(
+                call: Call<ManagerDashOne>,
+                response: Response<ManagerDashOne>
+            ) {
+                val dashOne: BarChart = BarChart(applicationContext)
 
-        chartView.holeRadius = 0f
-        chartView.transparentCircleRadius = 0f
-        chartView.legend.isEnabled = false
-        chartView.description.isEnabled = false
-        chartView.description.textAlign = Paint.Align.CENTER
-        chartView.setData(data)
-        chartView.invalidate()
+                val barEntries = ArrayList<BarEntry>(0)
 
-        chartView.layoutParams = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            (this.applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
-        )
+                var cont: Float = 0f
+                var entryList = ArrayList<String>()
 
-        val l = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            LayoutParams.WRAP_CONTENT
-        )
-        l.bottomMargin = 100
+                response.body()?.data?.forEach { data ->
+                    println(data.projectName)
+                    if(data.projectName == null)
+                        return@forEach
+                    entryList.add(data.projectName)
+                    val values:FloatArray = floatArrayOf(data.totalAmountWork.toFloat(),data.totalAmountProvisioning.toFloat())
+                    barEntries.add(BarEntry(cont, values))
+                    cont += 1
+                }
+                //dashOne.getXAxis().setValueFormatter(IndexAxisValueFormatter(entryList))
 
-        var textView = TextView(this)
-        textView.text = "Gráfico Foda 1"
-        textView.layoutParams = l
-        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                val barSet = BarDataSet(barEntries, "")
 
-        appContainer.addView(chartView)
-        appContainer.addView(textView)
+                barSet.isVisible = true
+                barSet.setDrawIcons(true)
+                barSet.iconsOffset = MPPointF(0F, 40F)
+                barSet.setColors(mutableListOf(Color.BLUE, Color.CYAN))
+                barSet.valueTextColor = Color.TRANSPARENT
+                barSet.stackLabels = arrayOf("Apontando em Dinheiro", "Provisionado em Dinheiro")
 
+                dashOne.description.isEnabled = false
+                dashOne.description.textAlign = Paint.Align.CENTER
 
-        val chartView2: PieChart = PieChart(this)
+                val params = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
+                )
+                params.bottomMargin = (applicationContext.getResources().getDisplayMetrics().density * 20).toInt()
 
-        chartView2.holeRadius = 0f
-        chartView2.transparentCircleRadius = 0f
-        chartView2.legend.isEnabled = false
-        chartView2.description.isEnabled = false
-        chartView2.description.textAlign = Paint.Align.CENTER
-        chartView2.setData(data)
-        chartView2.invalidate()
+                dashOne.layoutParams = params
+                dashOne.data = BarData(barSet)
+                dashOne.xAxis.valueFormatter = IndexAxisValueFormatter(entryList)
+                dashOne.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                dashOne.xAxis.labelRotationAngle = 45f
+                dashOne.invalidate()
 
-        chartView2.layoutParams = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            (this.applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
-        )
+                appContainer.addView(dashOne)
 
-        val textView2 = TextView(this)
-        textView2.text = "Gráfico Foda 2"
-        textView2.layoutParams = l
-        textView2.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                callback.invoke(true)
+            }
+        })
+    }
 
+    fun mountManagerDashTwo(callback: (Boolean) -> Unit) {
 
-        appContainer.addView(chartView2)
-        appContainer.addView(textView2)
+        //Manager Second Dash
+        val getSecondDash = dashRequest.getManagerDashTwo()
 
-        val chartView3: BarChart = BarChart(this)
+        getSecondDash.enqueue(object: Callback<ManagerDashTwo> {
+            override fun onFailure(call: Call<ManagerDashTwo>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
 
-        val barEntries = ArrayList<BarEntry>(0)
+            override fun onResponse(
+                call: Call<ManagerDashTwo>,
+                response: Response<ManagerDashTwo>
+            ) {
+                val dashTwo: BarChart = BarChart(applicationContext)
 
-        barEntries.add(BarEntry(1f, 10f))
-        barEntries.add(BarEntry(2f, 15f))
-        barEntries.add(BarEntry(3f, 20f))
-        barEntries.add(BarEntry(4f, 17f))
-        barEntries.add(BarEntry(5f, 19f))
-        barEntries.add(BarEntry(6f, 21f))
+                val barEntries = ArrayList<BarEntry>(0)
 
-        val barSet: BarDataSet = BarDataSet(barEntries, "")
+                var cont: Float = 0f
+                var entryList = ArrayList<String>()
 
-        barSet.isVisible = true
-        barSet.setDrawIcons(true)
-        barSet.iconsOffset = MPPointF(0F, 40F)
-        barSet.setColors(*ColorTemplate.COLORFUL_COLORS)
-        barSet.valueTextColor = Color.TRANSPARENT
+                response.body()?.data?.forEach { data ->
+                    println(data.projectName)
+                    if(data.projectName == null)
+                        return@forEach
+                    entryList.add(data.projectName)
+                    val values:FloatArray = floatArrayOf(data.totalHoursWork.toFloat(),data.totalHoursProvisioning.toFloat())
+                    barEntries.add(BarEntry(cont, values))
+                    cont += 1
+                }
 
-        chartView3.legend.isEnabled = false
-        chartView3.description.isEnabled = false
-        chartView3.description.textAlign = Paint.Align.CENTER
-        chartView3.setData(BarData(barSet))
-        chartView3.invalidate()
+                val barSet = BarDataSet(barEntries, "")
 
-        chartView3.layoutParams = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            (this.applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
-        )
+                barSet.isVisible = true
+                barSet.setDrawIcons(true)
+                barSet.iconsOffset = MPPointF(0F, 40F)
+                barSet.setColors(mutableListOf(Color.BLUE, Color.CYAN))
+                barSet.valueTextColor = Color.TRANSPARENT
+                barSet.stackLabels = arrayOf("Apontando em Horas", "Provisionado em Horas")
 
-        val textView3 = TextView(this)
-        textView3.text = "Gráfico Foda, agora em barras"
-        textView3.layoutParams = l
-        textView3.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                dashTwo.description.isEnabled = false
+                dashTwo.description.textAlign = Paint.Align.CENTER
 
-        appContainer.addView(chartView3)
-        appContainer.addView(textView3)
+                val params = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
+                )
+                params.bottomMargin = (applicationContext.getResources().getDisplayMetrics().density * 20).toInt()
+
+                dashTwo.layoutParams = params
+                dashTwo.data = BarData(barSet)
+                dashTwo.xAxis.valueFormatter = IndexAxisValueFormatter(entryList)
+                dashTwo.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                dashTwo.xAxis.labelRotationAngle = 45f
+                dashTwo.invalidate()
+
+                appContainer.addView(dashTwo)
+
+                callback.invoke(true)
+            }
+        })
+    }
+
+    fun mountManagerDashThree(callback: (Boolean) -> Unit){
+
+        //Manager Third Dash
+        val getThirdDash = dashRequest.getManagerDashThree()
+
+        getThirdDash.enqueue( object: Callback<ManagerDashThree> {
+            override fun onFailure(call: Call<ManagerDashThree>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(
+                call: Call<ManagerDashThree>,
+                response: Response<ManagerDashThree>
+            ) {
+                val dashThree: PieChart = PieChart(applicationContext)
+
+                val pieEntries = ArrayList<PieEntry>(0)
+
+                var cont: Float = 0f
+                var entryList = ArrayList<String>()
+
+                response.body()?.data?.forEach { data ->
+                    println(data.projectName)
+                    if(data.projectName == null)
+                        return@forEach
+                    entryList.add(data.projectName)
+                    pieEntries.add(PieEntry(data.employeeCount.toFloat(), data.projectName))
+                    cont += 1
+                }
+
+                val dataSet = PieDataSet(pieEntries, "")
+
+                dataSet.isVisible = true
+                dataSet.setDrawIcons(true)
+                dataSet.sliceSpace = 3f
+                dataSet.iconsOffset = MPPointF(0F, 40F)
+                dataSet.selectionShift = 5f
+                dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
+                dataSet.valueTextColor = Color.BLACK
+                dataSet.valueTextSize = 20f
+
+                val params = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
+                )
+                params.bottomMargin = (applicationContext.getResources().getDisplayMetrics().density * 20).toInt()
+
+                dashThree.layoutParams = params
+                dashThree.holeRadius = 0f
+                dashThree.transparentCircleRadius = 0f
+                dashThree.legend.isEnabled = false
+                dashThree.description.isEnabled = true
+                dashThree.description.setPosition(0F,40F)
+                dashThree.setData(PieData(dataSet))
+                dashThree.setEntryLabelColor(Color.BLACK)
+                dashThree.invalidate()
+
+                appContainer.addView(dashThree)
+
+                callback.invoke(true)
+            }
+        })
+
+    }
+
+    fun mountEmployeeDash(){
+
     }
 }

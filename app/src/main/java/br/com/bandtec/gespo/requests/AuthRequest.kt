@@ -11,4 +11,9 @@ interface AuthRequest {
         @Query("cpf") cpf:String,
         @Query("password") pass:String
     ):Call<Employee>
+
+    @GET("/user?")
+    fun getEmployee(
+        @Query("id") id:Int
+    ):Call<Employee>
 }

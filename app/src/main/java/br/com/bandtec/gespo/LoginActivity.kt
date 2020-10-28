@@ -48,11 +48,13 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
                 response.isSuccessful
-                Toast.makeText(applicationContext,
-                    "${response.code()} | LOGADO: ${response.body()?.name} - ${response.body()?.email}",
-                    Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext,
+//                    "${response.code()} | LOGADO: ${response.body()?.name} - ${response.body()?.email}",
+//                    Toast.LENGTH_SHORT).show()
+                //response.headers().
                 val mainActivity = Intent(applicationContext, MainActivity::class.java)
                 mainActivity.putExtra("username", response.body()?.name.toString())
+                mainActivity.putExtra("id", response.body()?.id)
                 startActivity(mainActivity)
             }
         })
