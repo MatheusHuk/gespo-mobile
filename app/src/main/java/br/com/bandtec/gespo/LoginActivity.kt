@@ -47,15 +47,26 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
-                response.isSuccessful
-//                Toast.makeText(applicationContext,
-//                    "${response.code()} | LOGADO: ${response.body()?.name} - ${response.body()?.email}",
-//                    Toast.LENGTH_SHORT).show()
-                //response.headers().
-                val mainActivity = Intent(applicationContext, MainActivity::class.java)
-                mainActivity.putExtra("username", response.body()?.name.toString())
-                mainActivity.putExtra("id", response.body()?.id)
-                startActivity(mainActivity)
+
+                val code = response.code()
+                
+                when(code){
+                    200 -> {
+                        val mainActivity = Intent(applicationContext, MainActivity::class.java)
+                        mainActivity.putExtra("username", response.body()?.name.toString())
+                        mainActivity.putExtra("id", response.body()?.id)
+                        startActivity(mainActivity)
+                    }
+                    401 -> {
+                        Toast.makeText(applicationContext, "Login e/ou senha inválido(s)", Toast.LENGTH_SHORT).show()
+                        loading.visibility = View.GONE
+                    }
+                    403 -> {
+                        Toast.makeText(applicationContext, "Login e/ou senha inválido(s)", Toast.LENGTH_SHORT).show()
+                        loading.visibility = View.GONE
+                    }
+                }
+
             }
         })
     }
