@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Gespo</string>
-    <string name="">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -16,8 +15,6 @@
         <item>Contador</item>
         <item>Cronômetro</item>
     </string-array>
-    <string name="">Search Filter</string>
-    <string name="">Search Filter</string>
     <string name="search_filter">Search Filter</string>
     <string name="period">Period</string>
     <string name="date">Date</string>

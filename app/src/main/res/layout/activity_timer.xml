@@ -69,7 +69,8 @@
         android:src="@drawable/ic_start"
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
-        app:layout_editor_absoluteX="115dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="120dp"
         android:layout_marginTop="10dp"
         tools:ignore="MissingConstraints" />
 
@@ -81,7 +82,8 @@
         android:src="@drawable/ic_pause"
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
-        app:layout_editor_absoluteX="187dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="10dp"
         tools:ignore="MissingConstraints" />
 
@@ -93,7 +95,8 @@
         android:src="@drawable/ic_stop"
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
-        app:layout_editor_absoluteX="258dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="120dp"
         android:layout_marginTop="10dp"
         tools:ignore="MissingConstraints" />
 
@@ -114,9 +117,10 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="21dp"
-        app:layout_editor_absoluteX="100dp"
         android:src="@drawable/ic_alarm"
         app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+        app:layout_constraintRight_toLeftOf="@+id/sp_options"
+        app:layout_constraintBottom_toBottomOf="@id/sp_options"
         android:contentDescription="icon of clock"
         tools:ignore="MissingConstraints"
         />
