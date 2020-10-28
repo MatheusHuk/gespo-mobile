@@ -1,22 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Gespo</string>
-    <string name="">MainActivity</string>
+    <string name="">" Main Activity"</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_time_entry">Time entries</string>
-    <string-array name="periodos">
-        <item>SEMANAL</item>
-        <item>QUINZENAL</item>
-        <item>MENSAL</item>
-        <item>ANUAL</item>
-    </string-array>
-    <string-array name="options">
-        <item>Timer</item>
-        <item>Contador</item>
-        <item>Cronômetro</item>
-    </string-array>
-    <string name="">Search Filter</string>
     <string name="">Search Filter</string>
     <string name="search_filter">Search Filter</string>
     <string name="period">Period</string>
