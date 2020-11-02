@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.bandtec.gespo">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,8 +11,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".TimerActivity"
+            android:label="TimerActivity">
+        </activity>
+        <activity
+            android:name=".CounterActivity"
+            android:label="CounterActivity">
+        </activity>
+        <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/">
+        </activity>
+        <activity
+            android:name=".TimesheetConsultActivity"
+            android:label="TimesheetConsultActivity">
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="LoginActivity">
+        </activity>
+        <activity
+            android:name=".TimeEntryActivity"
+            android:label="TimeEntryActivity">
+        </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

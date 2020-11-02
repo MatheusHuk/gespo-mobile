@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gespo</string>
+    <string name="title_home">Inicio</string>
+    <string name="title_dashboard">Gráficos</string>
+    <string name="title_notifications">Notificação</string>
+    <string name="title_time_entry">Apontamentos</string>
+    <string name="search_filter">Filtro de Busca</string>
+    <string name="period">Período</string>
+    <string name="date">Data</string>
+    <string name="project">Projeto</string>
+    <string name="filter">Filtar</string>
+    <string name="details">Detalhes</string>
+    <string name="hours">Horas</string>
+    <string name="actions">Ações</string>
+    <string name="hours_total">Total de horas</string>
+    <string name="Cpf">CPF</string>
+    <string name="password">Senha</string>
+    <string name="login">Login</string>
+</resources>
