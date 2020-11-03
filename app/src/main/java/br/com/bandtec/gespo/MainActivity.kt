@@ -8,6 +8,7 @@ import android.widget.LinearLayout.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import br.com.bandtec.gespo.model.Employee
 import br.com.bandtec.gespo.model.dashboards.ManagerDashOne
 import br.com.bandtec.gespo.model.dashboards.ManagerDashThree
 import br.com.bandtec.gespo.model.dashboards.ManagerDashTwo
@@ -46,25 +47,26 @@ class MainActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    val employeeRequest = api.create(AuthRequest::class.java)
+
     val dashRequest = dashApi.create(DashRequest::class.java)
 
-    var nome:String = ""
+    var cookie:String = ""
     var id:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Glide.with(this)
-            .load(R.mipmap.ring) // aqui é teu gif
+            .load(R.mipmap.ring)
             .asGif()
             .into(loadingImage);
 
-        //nome = intent.extras?.get("username").toString()
-        //id = intent.extras!!.getInt("id")
-        nome = "Matheus Huk"
-        id = 4
+        cookie = intent.extras!!.get("cookie").toString()
+        id = intent.extras!!.getInt("id")
+        val name = intent.extras!!.get("username").toString()
 
-        tv_username.text = nome
+        tv_username.text = name
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_dashboard
@@ -75,21 +77,32 @@ class MainActivity : AppCompatActivity() {
             return@OnNavigationItemSelectedListener true
         })
 
-        val employeeRequest = api.create(AuthRequest::class.java)
+        val getUser = employeeRequest.getEmployee(cookie, id)
 
-        val getUser = employeeRequest.getEmployee(id)
+        getUser.enqueue(object: Callback<Employee> {
+            override fun onFailure(call: Call<Employee>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
 
-        mountManagerDashOne(){ resp ->
-            print("1")
-            mountManagerDashTwo(){ resp ->
-                print("2")
-                mountManagerDashThree(){ resp ->
-                    print("3")
-                    loading.visibility = View.GONE
-                    app_scroll_view.visibility = View.VISIBLE
+            override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
+                val permission = response.body()?.office?.permission?.id
+
+                if(permission !== 1){
+                    mountManagerDashOne(){ resp ->
+                        mountManagerDashTwo(){ resp ->
+                            mountManagerDashThree(){ resp ->
+                                loading.visibility = View.GONE
+                                app_scroll_view.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                }else{
+                    println("IS NOT MANAGER")
                 }
             }
-        }
+        })
+
+
     }
 
     fun mountManagerDashOne(callback: (Boolean) -> Unit){
@@ -114,7 +127,6 @@ class MainActivity : AppCompatActivity() {
                 var entryList = ArrayList<String>()
 
                 response.body()?.data?.forEach { data ->
-                    println(data.projectName)
                     if(data.projectName == null)
                         return@forEach
                     entryList.add(data.projectName)
@@ -122,8 +134,6 @@ class MainActivity : AppCompatActivity() {
                     barEntries.add(BarEntry(cont, values))
                     cont += 1
                 }
-                //dashOne.getXAxis().setValueFormatter(IndexAxisValueFormatter(entryList))
-
                 val barSet = BarDataSet(barEntries, "")
 
                 barSet.isVisible = true
@@ -189,7 +199,6 @@ class MainActivity : AppCompatActivity() {
                 var entryList = ArrayList<String>()
 
                 response.body()?.data?.forEach { data ->
-                    println(data.projectName)
                     if(data.projectName == null)
                         return@forEach
                     entryList.add(data.projectName)
@@ -263,7 +272,6 @@ class MainActivity : AppCompatActivity() {
                 var entryList = ArrayList<String>()
 
                 response.body()?.data?.forEach { data ->
-                    println(data.projectName)
                     if(data.projectName == null)
                         return@forEach
                     entryList.add(data.projectName)
