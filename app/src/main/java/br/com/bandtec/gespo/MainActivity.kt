@@ -1,6 +1,7 @@
 package br.com.bandtec.gespo
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
@@ -111,11 +112,25 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
     }
 
     override fun onBackPressed() {
         //Nothing occurs
+    }
+
+    fun logOff(v:View){
+        loading.visibility = View.VISIBLE
+        app_scroll_view.visibility = View.GONE
+
+        val editor = preferences?.edit()
+
+        editor?.remove("id")
+        editor?.remove("username")
+        editor?.remove("cookie")
+        editor?.commit()
+
+        val loginActivity = Intent(this, LoginActivity::class.java)
+        startActivity(loginActivity)
     }
 
     fun mountManagerDashOne(callback: (Boolean) -> Unit){

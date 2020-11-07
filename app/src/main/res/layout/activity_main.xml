@@ -43,7 +43,8 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="30dp"
             android:layout_marginRight="30dp"
-            android:background="@color/primaryLightGrey"/>
+            android:background="@color/primaryLightGrey"
+            android:onClick="logOff"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
