@@ -1,5 +1,7 @@
 package br.com.bandtec.gespo
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -37,6 +39,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    var preferences: SharedPreferences? = null
+
     val api = Retrofit.Builder()
         .baseUrl("https://gespo-rest.azurewebsites.net/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -52,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     val dashRequest = dashApi.create(DashRequest::class.java)
 
     var cookie:String = ""
+    var name:String = ""
     var id:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,10 +66,13 @@ class MainActivity : AppCompatActivity() {
             .load(R.mipmap.ring)
             .asGif()
             .into(loadingImage);
+        preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
 
-        cookie = intent.extras!!.get("cookie").toString()
-        id = intent.extras!!.getInt("id")
-        val name = intent.extras!!.get("username").toString()
+        id = preferences?.getInt("id", 0)!!.toInt()
+        name = preferences?.getString("username", "").toString()
+        cookie = preferences?.getString("cookie", "").toString()
+
+        Toast.makeText(applicationContext, "ID: ${id}", Toast.LENGTH_SHORT).show()
 
         tv_username.text = name
 
@@ -85,9 +93,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
+                Toast.makeText(applicationContext, "code: ${response.code()}", Toast.LENGTH_SHORT).show()
                 val permission = response.body()?.office?.permission?.id
 
-                if(permission !== 1){
+                if(permission === 1){
                     mountManagerDashOne(){ resp ->
                         mountManagerDashTwo(){ resp ->
                             mountManagerDashThree(){ resp ->

@@ -1,6 +1,9 @@
 package br.com.bandtec.gespo
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -17,6 +20,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
 
+    var preferences: SharedPreferences? = null
+
     val api = Retrofit.Builder()
         .baseUrl("https://gespo-rest.azurewebsites.net/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -31,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
             .load(R.mipmap.ring) // aqui é teu gif
             .asGif()
             .into(loadingImage);
+        preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
     }
 
     override fun onBackPressed() {
@@ -40,10 +46,13 @@ class LoginActivity : AppCompatActivity() {
     fun login(v: View){
 
         loading.visibility = View.VISIBLE
+
         val cpf = et_cpf.text.toString()
         val pass = et_senha.text.toString()
         
         val login = employeeRequests.login(cpf, pass)
+
+        val context = this
         
         login.enqueue(object : Callback<Employee> {
             override fun onFailure(call: Call<Employee>, t: Throwable) {
@@ -56,13 +65,19 @@ class LoginActivity : AppCompatActivity() {
                 
                 when(code){
                     200 -> {
-                        val mainActivity = Intent(applicationContext, MainActivity::class.java)
+                        val mainActivity = Intent(context, MainActivity::class.java)
                         val cookie = response.headers().get("Set-Cookie")
 
-                        mainActivity.putExtra("id", response.body()?.id)
-                        mainActivity.putExtra("username", response.body()?.name.toString())
-                        mainActivity.putExtra("cookie", cookie)
+                        val editor = preferences?.edit()
+
+                        editor?.putInt("id", response.body()!!.id)
+                        editor?.putString("username", response.body()!!.name)
+                        editor?.putString("cookie", cookie)
+
+                        editor?.commit()
+
                         startActivity(mainActivity)
+                        //Toast.makeText(applicationContext, "ID IN LOGIN: ${preferences?.getInt("id", 0)}", Toast.LENGTH_SHORT).show()
                     }
                     401 -> {
                         Toast.makeText(applicationContext, "Login e/ou senha inválido(s)", Toast.LENGTH_SHORT).show()
