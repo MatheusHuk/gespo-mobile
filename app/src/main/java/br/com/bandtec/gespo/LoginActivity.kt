@@ -33,6 +33,10 @@ class LoginActivity : AppCompatActivity() {
             .into(loadingImage);
     }
 
+    override fun onBackPressed() {
+        //Nothing occurs
+    }
+
     fun login(v: View){
 
         loading.visibility = View.VISIBLE

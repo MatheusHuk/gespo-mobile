@@ -92,6 +92,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        //Nothing occurs
+    }
+
     fun mountManagerDashOne(callback: (Boolean) -> Unit){
 
         //Manager First Dash
