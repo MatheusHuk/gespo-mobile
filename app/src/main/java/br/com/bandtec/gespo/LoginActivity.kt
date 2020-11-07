@@ -57,8 +57,11 @@ class LoginActivity : AppCompatActivity() {
                 when(code){
                     200 -> {
                         val mainActivity = Intent(applicationContext, MainActivity::class.java)
-                        mainActivity.putExtra("username", response.body()?.name.toString())
+                        val cookie = response.headers().get("Set-Cookie")
+
                         mainActivity.putExtra("id", response.body()?.id)
+                        mainActivity.putExtra("username", response.body()?.name.toString())
+                        mainActivity.putExtra("cookie", cookie)
                         startActivity(mainActivity)
                     }
                     401 -> {
