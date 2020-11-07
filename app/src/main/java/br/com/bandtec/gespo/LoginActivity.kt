@@ -77,7 +77,6 @@ class LoginActivity : AppCompatActivity() {
                         editor?.commit()
 
                         startActivity(mainActivity)
-                        //Toast.makeText(applicationContext, "ID IN LOGIN: ${preferences?.getInt("id", 0)}", Toast.LENGTH_SHORT).show()
                     }
                     401 -> {
                         Toast.makeText(applicationContext, "Login e/ou senha inválido(s)", Toast.LENGTH_SHORT).show()
