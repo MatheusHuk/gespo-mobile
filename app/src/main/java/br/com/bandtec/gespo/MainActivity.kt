@@ -71,8 +71,6 @@ class MainActivity : AppCompatActivity() {
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
 
-        Toast.makeText(applicationContext, "ID: ${id}", Toast.LENGTH_SHORT).show()
-
         tv_username.text = name
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -105,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }else{
-                    Toast.makeText(applicationContext, "IS NOT MANAGER", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(applicationContext, "IS NOT MANAGER", Toast.LENGTH_SHORT).show()
                     mountEmployeeDashOne(){ resp ->
                         mountEmployeeDashTwo(){ resp ->
                             mountEmployeeDashThree(){ resp ->
@@ -362,7 +360,10 @@ class MainActivity : AppCompatActivity() {
     fun mountEmployeeDashOne(callback: (Boolean) -> Unit){
 
         //Manager First Dash
-        val getFirstDash = dashRequest.getEmployeeDashOne()
+        Toast.makeText(applicationContext, "O: $name", Toast.LENGTH_SHORT).show()
+        val query =
+                "{\"measures\":[\"EmployeeMetrics.totalHoursWork\"],\"timeDimensions\":[],\"dimensions\":[\"Project.name\"],\"filters\":[{\"dimension\":\"Employee.name\",\"operator\":\"equals\",\"values\":[\"$name\"]}]}"
+        val getFirstDash = dashRequest.getEmployeeDashOne(query)
 
         getFirstDash.enqueue(object: Callback<EmployeeDashOne> {
             override fun onFailure(call: Call<EmployeeDashOne>, t: Throwable) {
@@ -384,8 +385,7 @@ class MainActivity : AppCompatActivity() {
                     if(data.projectName == null)
                         return@forEach
                     entryList.add(data.projectName)
-                    val values:FloatArray = floatArrayOf(data.totalAmountWork.toFloat(),data.totalAmountProvisioning.toFloat())
-                    barEntries.add(BarEntry(cont, values))
+                    barEntries.add(BarEntry(cont, data.totalAmountWork.toFloat()))
                     cont += 1
                 }
                 val barSet = BarDataSet(barEntries, "")
@@ -419,7 +419,7 @@ class MainActivity : AppCompatActivity() {
                 l.bottomMargin = 100
 
                 val textView = TextView(applicationContext)
-                textView.text = "Apontamento X provisionamento em Dinheiro por Projeto"
+                textView.text = "Apontamentos em Horas por Projeto"
                 textView.layoutParams = l
                 textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
 
