@@ -72,6 +72,8 @@ class LoginActivity : AppCompatActivity() {
 
                         editor?.putInt("id", response.body()!!.id)
                         editor?.putString("username", response.body()!!.name)
+                        editor?.putString("cpf", cpf)
+                        editor?.putString("pass", pass)
                         editor?.putString("cookie", cookie)
 
                         editor?.commit()

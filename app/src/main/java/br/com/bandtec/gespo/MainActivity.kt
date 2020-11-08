@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
-                Toast.makeText(applicationContext, "code: ${response.code()}", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(applicationContext, "code: ${response.code()}", Toast.LENGTH_SHORT).show()
                 val permission = response.body()?.office?.permission?.id
 
                 if(permission === 1){
