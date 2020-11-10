@@ -1,6 +1,9 @@
 package br.com.bandtec.gespo
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -17,6 +20,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
 
+    var preferences: SharedPreferences? = null
+
     val api = Retrofit.Builder()
         .baseUrl("https://gespo-rest.azurewebsites.net/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -31,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
             .load(R.mipmap.ring) // aqui é teu gif
             .asGif()
             .into(loadingImage);
+        preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
     }
 
     override fun onBackPressed() {
@@ -40,10 +46,13 @@ class LoginActivity : AppCompatActivity() {
     fun login(v: View){
 
         loading.visibility = View.VISIBLE
+
         val cpf = et_cpf.text.toString()
         val pass = et_senha.text.toString()
         
         val login = employeeRequests.login(cpf, pass)
+
+        val context = this
         
         login.enqueue(object : Callback<Employee> {
             override fun onFailure(call: Call<Employee>, t: Throwable) {
@@ -56,9 +65,19 @@ class LoginActivity : AppCompatActivity() {
                 
                 when(code){
                     200 -> {
-                        val mainActivity = Intent(applicationContext, MainActivity::class.java)
-                        mainActivity.putExtra("username", response.body()?.name.toString())
-                        mainActivity.putExtra("id", response.body()?.id)
+                        val mainActivity = Intent(context, MainActivity::class.java)
+                        val cookie = response.headers().get("Set-Cookie")
+
+                        val editor = preferences?.edit()
+
+                        editor?.putInt("id", response.body()!!.id)
+                        editor?.putString("username", response.body()!!.name)
+                        editor?.putString("cpf", cpf)
+                        editor?.putString("pass", pass)
+                        editor?.putString("cookie", cookie)
+
+                        editor?.commit()
+
                         startActivity(mainActivity)
                     }
                     401 -> {
