@@ -1,6 +1,8 @@
 package br.com.bandtec.gespo
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.widget.LinearLayout.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,11 +12,27 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.core.view.marginTop
+import br.com.bandtec.gespo.model.Project
+import br.com.bandtec.gespo.model.dashboards.ManagerDashOne
+import br.com.bandtec.gespo.requests.ProjectRequest
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_timesheet_consult.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class TimesheetConsultActivity : AppCompatActivity() {
+
+    var preferences: SharedPreferences? = null
+
+    val projects = mutableListOf<String>()
+
+    var cookie:String = ""
+    var name:String = ""
+    var id:Int = 0
 
     var estadoFiltro = false
 
@@ -22,19 +40,45 @@ class TimesheetConsultActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timesheet_consult)
 
+        preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
+
+        id = preferences?.getInt("id", 0)!!.toInt()
+        name = preferences?.getString("username", "").toString()
+        cookie = preferences?.getString("cookie", "").toString()
+
             sp_periodo.adapter = ArrayAdapter(this,
             R.layout.support_simple_spinner_dropdown_item,
             resources.getStringArray(R.array.periodos))
 
-            val s= mutableListOf<String>()
+            val api = Retrofit.Builder()
+            .baseUrl("https://gespo-rest.azurewebsites.net/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-            s.add("projeto 1")
-            s.add("projeto 2")
-            s.add("projeto 3")
+            val projectRequest = api.create(ProjectRequest::class.java)
 
-            sp_projeto.adapter = ArrayAdapter(this,
-            R.layout.support_simple_spinner_dropdown_item,
-            s)
+            val getProject = projectRequest.getProjectsByEmployee(cookie,id)
+
+
+
+            getProject.enqueue(object:Callback<List<Project>> {
+                override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onResponse(
+                    call: Call<List<Project>>,
+                    response: Response<List<Project>>
+                ) {
+                    response.body()?.forEach{project ->
+                        projects.add(project.name)
+
+                    }
+                    sp_projeto.adapter = ArrayAdapter(applicationContext,
+                        R.layout.support_simple_spinner_dropdown_item,
+                        projects)
+                }
+            })
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_apontamentos
@@ -47,7 +91,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
     }
 
     fun abrirFiltro(componente:View){
-        val params: ViewGroup.MarginLayoutParams = tl_tabela_consulta.layoutParams as ViewGroup.MarginLayoutParams
+        val params: ViewGroup.MarginLayoutParams = sv_scroll.layoutParams as ViewGroup.MarginLayoutParams
 
         if (estadoFiltro) {
             //tornando os formulários do filtro de busca invisíveis
@@ -59,11 +103,11 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
             //ajustando o table layout na tela para se adequar as mudanças
             //criando uma variável do tipo Layout Params
-            params.topMargin = TypedValue.COMPLEX_UNIT_DIP *290
-            tl_tabela_consulta.layoutParams = params
+            params.topMargin = TypedValue.COMPLEX_UNIT_DIP *280
+            sv_scroll.layoutParams = params
 
-            tl_tabela_consulta.invalidate()
-            tl_tabela_consulta.requestLayout()
+            sv_scroll.invalidate()
+            sv_scroll.requestLayout()
 
             tv_txt_detalhes.visibility = View.VISIBLE
 
@@ -72,11 +116,11 @@ class TimesheetConsultActivity : AppCompatActivity() {
         else{
         //ajustando o table layout na tela para se adequar as mudanças
         //criando uma variável do tipo Layout Params
-        params.topMargin = TypedValue.COMPLEX_UNIT_DIP * 510
-        tl_tabela_consulta.layoutParams = params
+        params.topMargin = TypedValue.COMPLEX_UNIT_DIP * 480
+        sv_scroll.layoutParams = params
 
-        tl_tabela_consulta.invalidate()
-        tl_tabela_consulta.requestLayout()
+        sv_scroll.invalidate()
+        sv_scroll.requestLayout()
 
         //tornando os formulários do filtro de busca visíveis
         v_fundo_form_top.visibility = View.VISIBLE
