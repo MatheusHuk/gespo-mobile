@@ -1,5 +1,8 @@
 package br.com.bandtec.gespo
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -8,9 +11,8 @@ import android.widget.LinearLayout.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import br.com.bandtec.gespo.model.dashboards.ManagerDashOne
-import br.com.bandtec.gespo.model.dashboards.ManagerDashThree
-import br.com.bandtec.gespo.model.dashboards.ManagerDashTwo
+import br.com.bandtec.gespo.model.Employee
+import br.com.bandtec.gespo.model.dashboards.*
 import br.com.bandtec.gespo.requests.AuthRequest
 import br.com.bandtec.gespo.requests.DashRequest
 import br.com.bandtec.gespo.utils.changeActivity
@@ -36,6 +38,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    var preferences: SharedPreferences? = null
+
     val api = Retrofit.Builder()
         .baseUrl("https://gespo-rest.azurewebsites.net/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -46,25 +50,28 @@ class MainActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    val employeeRequest = api.create(AuthRequest::class.java)
+
     val dashRequest = dashApi.create(DashRequest::class.java)
 
-    var nome:String = ""
+    var cookie:String = ""
+    var name:String = ""
     var id:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Glide.with(this)
-            .load(R.mipmap.ring) // aqui é teu gif
+            .load(R.mipmap.ring)
             .asGif()
             .into(loadingImage);
+        preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
 
-        //nome = intent.extras?.get("username").toString()
-        //id = intent.extras!!.getInt("id")
-        nome = "Matheus Huk"
-        id = 4
+        id = preferences?.getInt("id", 0)!!.toInt()
+        name = preferences?.getString("username", "").toString()
+        cookie = preferences?.getString("cookie", "").toString()
 
-        tv_username.text = nome
+        tv_username.text = name
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_dashboard
@@ -75,21 +82,59 @@ class MainActivity : AppCompatActivity() {
             return@OnNavigationItemSelectedListener true
         })
 
-        val employeeRequest = api.create(AuthRequest::class.java)
+        val getUser = employeeRequest.getEmployee(cookie, id)
 
-        val getUser = employeeRequest.getEmployee(id)
+        getUser.enqueue(object: Callback<Employee> {
+            override fun onFailure(call: Call<Employee>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
 
-        mountManagerDashOne(){ resp ->
-            print("1")
-            mountManagerDashTwo(){ resp ->
-                print("2")
-                mountManagerDashThree(){ resp ->
-                    print("3")
-                    loading.visibility = View.GONE
-                    app_scroll_view.visibility = View.VISIBLE
+            override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
+                //Toast.makeText(applicationContext, "code: ${response.code()}", Toast.LENGTH_SHORT).show()
+                val permission = response.body()?.office?.permission?.id
+
+                if(permission === 1){
+                    mountManagerDashOne(){ resp ->
+                        mountManagerDashTwo(){ resp ->
+                            mountManagerDashThree(){ resp ->
+                                loading.visibility = View.GONE
+                                app_scroll_view.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                }else{
+                    //Toast.makeText(applicationContext, "IS NOT MANAGER", Toast.LENGTH_SHORT).show()
+                    mountEmployeeDashOne(){ resp ->
+                        mountEmployeeDashTwo(){ resp ->
+                            mountEmployeeDashThree(){ resp ->
+                                loading.visibility = View.GONE
+                                app_scroll_view.visibility = View.VISIBLE
+                            }
+                        }
+                    }
                 }
             }
-        }
+        })
+
+    }
+
+    override fun onBackPressed() {
+        //Nothing occurs
+    }
+
+    fun logOff(v:View){
+        loading.visibility = View.VISIBLE
+        app_scroll_view.visibility = View.GONE
+
+        val editor = preferences?.edit()
+
+        editor?.remove("id")
+        editor?.remove("username")
+        editor?.remove("cookie")
+        editor?.commit()
+
+        val loginActivity = Intent(this, LoginActivity::class.java)
+        startActivity(loginActivity)
     }
 
     fun mountManagerDashOne(callback: (Boolean) -> Unit){
@@ -114,7 +159,6 @@ class MainActivity : AppCompatActivity() {
                 var entryList = ArrayList<String>()
 
                 response.body()?.data?.forEach { data ->
-                    println(data.projectName)
                     if(data.projectName == null)
                         return@forEach
                     entryList.add(data.projectName)
@@ -122,8 +166,6 @@ class MainActivity : AppCompatActivity() {
                     barEntries.add(BarEntry(cont, values))
                     cont += 1
                 }
-                //dashOne.getXAxis().setValueFormatter(IndexAxisValueFormatter(entryList))
-
                 val barSet = BarDataSet(barEntries, "")
 
                 barSet.isVisible = true
@@ -189,7 +231,6 @@ class MainActivity : AppCompatActivity() {
                 var entryList = ArrayList<String>()
 
                 response.body()?.data?.forEach { data ->
-                    println(data.projectName)
                     if(data.projectName == null)
                         return@forEach
                     entryList.add(data.projectName)
@@ -263,7 +304,6 @@ class MainActivity : AppCompatActivity() {
                 var entryList = ArrayList<String>()
 
                 response.body()?.data?.forEach { data ->
-                    println(data.projectName)
                     if(data.projectName == null)
                         return@forEach
                     entryList.add(data.projectName)
@@ -317,7 +357,225 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun mountEmployeeDash(){
+    fun mountEmployeeDashOne(callback: (Boolean) -> Unit){
+
+        //Manager First Dash
+        Toast.makeText(applicationContext, "O: $name", Toast.LENGTH_SHORT).show()
+        val query =
+                "{\"measures\":[\"EmployeeMetrics.totalHoursWork\"],\"timeDimensions\":[],\"dimensions\":[\"Project.name\"],\"filters\":[{\"dimension\":\"Employee.name\",\"operator\":\"equals\",\"values\":[\"$name\"]}]}"
+        val getFirstDash = dashRequest.getEmployeeDashOne(query)
+
+        getFirstDash.enqueue(object: Callback<EmployeeDashOne> {
+            override fun onFailure(call: Call<EmployeeDashOne>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(
+                call: Call<EmployeeDashOne>,
+                response: Response<EmployeeDashOne>
+            ) {
+                val dashOne: BarChart = BarChart(applicationContext)
+
+                val barEntries = ArrayList<BarEntry>(0)
+
+                var cont: Float = 0f
+                var entryList = ArrayList<String>()
+
+                response.body()?.data?.forEach { data ->
+                    if(data.projectName == null)
+                        return@forEach
+                    entryList.add(data.projectName)
+                    barEntries.add(BarEntry(cont, data.totalAmountWork.toFloat()))
+                    cont += 1
+                }
+                val barSet = BarDataSet(barEntries, "")
+
+                barSet.isVisible = true
+                barSet.setDrawIcons(true)
+                barSet.iconsOffset = MPPointF(0F, 40F)
+                barSet.setColors(mutableListOf(Color.BLUE, Color.CYAN))
+                barSet.valueTextColor = Color.TRANSPARENT
+                barSet.stackLabels = arrayOf("Apontando em Dinheiro", "Provisionado em Dinheiro")
+
+                dashOne.description.isEnabled = false
+                dashOne.description.textAlign = Paint.Align.CENTER
+
+                val params = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
+                )
+
+                dashOne.layoutParams = params
+                dashOne.data = BarData(barSet)
+                dashOne.xAxis.valueFormatter = IndexAxisValueFormatter(entryList)
+                dashOne.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                dashOne.xAxis.labelRotationAngle = 45f
+                dashOne.invalidate()
+
+                val l = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+                )
+                l.bottomMargin = 100
+
+                val textView = TextView(applicationContext)
+                textView.text = "Apontamentos em Horas por Projeto"
+                textView.layoutParams = l
+                textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
+                appContainer.addView(dashOne)
+                appContainer.addView(textView)
+
+                callback.invoke(true)
+            }
+        })
+    }
+
+    fun mountEmployeeDashTwo(callback: (Boolean) -> Unit) {
+
+        //Manager Second Dash
+        val getSecondDash = dashRequest.getEmployeeDashTwo()
+
+        getSecondDash.enqueue(object: Callback<EmployeeDashTwo> {
+            override fun onFailure(call: Call<EmployeeDashTwo>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(
+                call: Call<EmployeeDashTwo>,
+                response: Response<EmployeeDashTwo>
+            ) {
+                val dashTwo: BarChart = BarChart(applicationContext)
+
+                val barEntries = ArrayList<BarEntry>(0)
+
+                var cont: Float = 0f
+                var entryList = ArrayList<String>()
+
+                response.body()?.data?.forEach { data ->
+                    if(data.projectName == null)
+                        return@forEach
+                    entryList.add(data.projectName)
+                    val values:FloatArray = floatArrayOf(data.totalHoursWork.toFloat(),data.totalHoursProvisioning.toFloat())
+                    barEntries.add(BarEntry(cont, values))
+                    cont += 1
+                }
+
+                val barSet = BarDataSet(barEntries, "")
+
+                barSet.isVisible = true
+                barSet.setDrawIcons(true)
+                barSet.iconsOffset = MPPointF(0F, 40F)
+                barSet.setColors(mutableListOf(Color.BLUE, Color.CYAN))
+                barSet.valueTextColor = Color.TRANSPARENT
+                barSet.stackLabels = arrayOf("Apontando em Horas", "Provisionado em Horas")
+
+                dashTwo.description.isEnabled = false
+                dashTwo.description.textAlign = Paint.Align.CENTER
+
+                val params = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
+                )
+
+                dashTwo.layoutParams = params
+                dashTwo.data = BarData(barSet)
+                dashTwo.xAxis.valueFormatter = IndexAxisValueFormatter(entryList)
+                dashTwo.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                dashTwo.xAxis.labelRotationAngle = 45f
+                dashTwo.invalidate()
+
+                val l = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+                )
+                l.bottomMargin = 100
+
+                val textView = TextView(applicationContext)
+                textView.text = "Apontamento X provisionamento em Horas por Projeto"
+                textView.layoutParams = l
+                textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
+                appContainer.addView(dashTwo)
+                appContainer.addView(textView)
+
+                callback.invoke(true)
+            }
+        })
+    }
+
+    fun mountEmployeeDashThree(callback: (Boolean) -> Unit){
+
+        //Manager Third Dash
+        val getThirdDash = dashRequest.getEmployeeDashThree()
+
+        getThirdDash.enqueue( object: Callback<EmployeeDashThree> {
+            override fun onFailure(call: Call<EmployeeDashThree>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(
+                call: Call<EmployeeDashThree>,
+                response: Response<EmployeeDashThree>
+            ) {
+                val dashThree: PieChart = PieChart(applicationContext)
+
+                val pieEntries = ArrayList<PieEntry>(0)
+
+                var cont: Float = 0f
+                var entryList = ArrayList<String>()
+
+                response.body()?.data?.forEach { data ->
+                    if(data.projectName == null)
+                        return@forEach
+                    entryList.add(data.projectName)
+                    pieEntries.add(PieEntry(data.employeeCount.toFloat(), data.projectName))
+                    cont += 1
+                }
+
+                val dataSet = PieDataSet(pieEntries, "")
+
+                dataSet.isVisible = true
+                dataSet.setDrawIcons(true)
+                dataSet.sliceSpace = 3f
+                dataSet.iconsOffset = MPPointF(0F, 40F)
+                dataSet.selectionShift = 5f
+                dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
+                dataSet.valueTextColor = Color.BLACK
+                dataSet.valueTextSize = 20f
+
+                val params = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    (applicationContext.getResources().getDisplayMetrics().density * 400).toInt()
+                )
+
+                dashThree.layoutParams = params
+                dashThree.holeRadius = 0f
+                dashThree.transparentCircleRadius = 0f
+                dashThree.legend.isEnabled = false
+                dashThree.description.isEnabled = true
+                dashThree.description.setPosition(0F,40F)
+                dashThree.setData(PieData(dataSet))
+                dashThree.setEntryLabelColor(Color.BLACK)
+                dashThree.invalidate()
+
+                val l = LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+                )
+                l.bottomMargin = 100
+
+                val textView = TextView(applicationContext)
+                textView.text = "Quantidade de funcionários por Projeto"
+                textView.layoutParams = l
+                textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
+                appContainer.addView(dashThree)
+                appContainer.addView(textView)
+
+                callback.invoke(true)
+            }
+        })
 
     }
 }
