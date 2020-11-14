@@ -282,14 +282,14 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:stretchColumns="0,3"
             android:id="@+id/tl_tabela_consulta"
             app:layout_constraintTop_toBottomOf="@id/iv_gespo_line">
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="10dp"
                 android:layout_marginTop="10dp">
 
                 <TextView
@@ -328,44 +328,44 @@
                     android:textColor="#000000"
                     android:textSize="18sp" />
             </TableRow>
+<!--            -->
+<!--            <TableRow-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                >-->
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                >
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="Projeto Teste"-->
+<!--                    android:textColor="#000000"-->
+<!--                    android:textSize="18sp" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Projeto Teste"
-                    android:textColor="#000000"
-                    android:textSize="18sp" />
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="07/10/2020"-->
+<!--                    android:textColor="#000000"-->
+<!--                    android:textSize="18sp" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="07/10/2020"
-                    android:textColor="#000000"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="8"
-                    android:textColor="#000000"
-                    android:textSize="18sp" />
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="8"-->
+<!--                    android:textColor="#000000"-->
+<!--                    android:textSize="18sp" />-->
 
 
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_baseline_delete_24"/>
+<!--                <ImageButton-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/ic_baseline_delete_24"/>-->
 
-            </TableRow>
+<!--            </TableRow>-->
 
         </TableLayout>
 
@@ -378,7 +378,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginBottom="2dp"
         android:id="@+id/cl_baixo"
         android:background="@color/primaryLightBlue"
         app:layout_constraintBottom_toTopOf="@id/nav_view">
