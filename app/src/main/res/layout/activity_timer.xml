@@ -50,35 +50,88 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/cronometro"
-        android:text="00:00:00"
+        app:layout_constraintRight_toLeftOf="@id/tv_separator1"
+        android:id="@+id/tv_hours"
+        android:text="00"
         android:textColor="#2E6CA4"
         android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
         android:layout_marginTop="200dp"
-        android:gravity="center"/>
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_separator1"
+        app:layout_constraintRight_toLeftOf="@id/tv_minutes"
+        android:text=":"
+        android:textColor="#2E6CA4"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        android:layout_marginTop="200dp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/tv_minutes"
+        android:text="00"
+        android:textColor="#2E6CA4"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        android:layout_marginTop="200dp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_separator2"
+        app:layout_constraintLeft_toRightOf="@id/tv_minutes"
+        android:text=":"
+        android:textColor="#2E6CA4"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        android:layout_marginTop="200dp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/tv_separator2"
+        android:id="@+id/tv_seconds"
+        android:text="00"
+        android:textColor="#2E6CA4"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        android:layout_marginTop="200dp"
+        android:gravity="center" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fab_play"
-        app:layout_constraintTop_toBottomOf="@id/cronometro"
+        app:layout_constraintTop_toBottomOf="@id/tv_minutes"
         android:src="@drawable/ic_start"
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="120dp"
         android:layout_marginTop="10dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:onClick="startTimer"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fab_pause"
-        app:layout_constraintTop_toBottomOf="@id/cronometro"
+        app:layout_constraintTop_toBottomOf="@id/tv_minutes"
         android:src="@drawable/ic_pause"
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
@@ -91,14 +144,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fab_stop"
-        app:layout_constraintTop_toBottomOf="@id/cronometro"
+        app:layout_constraintTop_toBottomOf="@id/tv_minutes"
         android:src="@drawable/ic_stop"
         app:fabSize="mini"
         android:backgroundTint="#2E6CA4"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="120dp"
         android:layout_marginTop="10dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:onClick="stopTimer"/>
 
     <!-- text help -->
     <TextView
