@@ -128,7 +128,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
                         txtProject.setTextColor(Color.BLACK)
 
-                        txtDate.text = timeEntry.creationDate.toString()
+                        txtDate.text = "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
                         txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
                         txtDate.setTextColor(Color.BLACK)
 
@@ -136,7 +136,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
                         txtHours.setTextColor(Color.BLACK)
 
-                        btDelete.text = "teste"
+                        btDelete.text = "A"
                         btDelete.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
                         btDelete.setTextColor(Color.BLACK)
 
