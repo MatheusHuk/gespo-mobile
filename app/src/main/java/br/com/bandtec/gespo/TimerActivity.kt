@@ -3,22 +3,14 @@ package br.com.bandtec.gespo
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.HandlerCompat.postDelayed
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_timer.*
-import java.time.LocalDateTime
-import java.util.*
 import kotlin.math.truncate
 
 class TimerActivity : AppCompatActivity() {
@@ -28,8 +20,9 @@ class TimerActivity : AppCompatActivity() {
     private var hours: Int = 0
     private var minutes: Int = 0
     private var seconds: Int = 0
-    private var timestamp: Long = 0
-    private var istimerRunning = false
+    private var timerTimestamp: Long = 0
+    private var timerIsRunning = false
+    private var timerSum: Long = 0
 
     val timer = object : CountDownTimer((24 * 60 * 60 * 1000), 1000) {
         override fun onTick(millisUntilFinished: Long) {
@@ -47,15 +40,11 @@ class TimerActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_timer
-
-        //esse é o código do spinner
-        //ele ta puxando lá do arquivo strings.xml as opções
         sp_options.adapter = ArrayAdapter(
             this,
             R.layout.support_simple_spinner_dropdown_item,
             resources.getStringArray(R.array.options)
         )
-
         navView.setOnNavigationItemSelectedListener(
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
                 changeActivity(item, this.applicationContext)
@@ -71,50 +60,31 @@ class TimerActivity : AppCompatActivity() {
     }
 
     fun startTimer(v: View) {
-        if (!istimerRunning) {
-            timer.start()
-            istimerRunning = true
-            if (timestamp.equals(0L)) {
-                timestamp = System.currentTimeMillis()
-
-                val editor = preferences?.edit()
-                editor?.putLong("timerTimestamp", timestamp)
-                editor?.putBoolean("timerIsRunning", true)
-
-                editor?.commit()
-            }
-            fab_play.isEnabled = false
-            fab_pause.isEnabled = true
-            fab_stop.isEnabled = true
-        }
+        this.timer.start()
+        this.timerIsRunning = true
+        this.timerTimestamp = System.currentTimeMillis()
+        this.normalizePreferences()
     }
 
     fun pauseTimer(v: View) {
-        if (istimerRunning) {
-            timer.cancel()
-            istimerRunning = false
-            fab_play.isEnabled = true
-            fab_pause.isEnabled = false
-            fab_stop.isEnabled = true
-
-            val editor = preferences?.edit()
-            editor?.remove("timerIsRunning")
-            editor?.commit()
-        }
+        this.timer.cancel()
+        this.timerIsRunning = false
+        this.timerSum = (this.seconds * 1000 + (this.minutes * 60000) + (this.hours * 3600000)).toLong()
+        this.normalizePreferences()
     }
 
     fun stopTimer(v: View) {
-        if (istimerRunning) {
-            timer.cancel()
-            istimerRunning = false
-        }
-        val editor = preferences?.edit()
-        editor?.remove("timerTimestamp")
-        editor?.remove("timerIsRunning")
-        editor?.commit()
-
-        val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
-        startActivity(timeEntryActivity)
+//        if (timerIsRunning) {
+//            timer.cancel()
+//            timerIsRunning = false
+//        }
+//        val editor = preferences?.edit()
+//        editor?.remove("timerTimestamp")
+//        editor?.remove("timerIsRunning")
+//        editor?.commit()
+//
+//        val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
+//        startActivity(timeEntryActivity)
     }
 
     fun addSecond() {
@@ -145,16 +115,25 @@ class TimerActivity : AppCompatActivity() {
     }
 
     fun checkTimeStamp(){
-        val TS = preferences?.getLong("timerTimestamp", 0)
-        if(TS != 0L){
-            this.timestamp = TS!!
-            val currentTime = System.currentTimeMillis()
-            calculateTimestamp(timestamp, currentTime)
+        this.timerTimestamp = preferences!!.getLong("timerTimestamp", 0)
+        this.timerIsRunning = preferences!!.getBoolean("timerIsRunning", false)
+        this.timerSum = preferences!!.getLong("timerSum", 0)
+
+        if(!timerTimestamp.equals(0L)){
+            if(timerIsRunning){
+                if(timerSum.equals(0L)){
+                    calculateTimestamp((System.currentTimeMillis() - timerTimestamp))
+                }else{
+                    calculateTimestamp(timerSum + (System.currentTimeMillis() - timerTimestamp))
+                }
+            }else{
+                calculateTimestamp(timerSum)
+            }
         }
     }
 
-    fun calculateTimestamp(start: Long, actual: Long){
-        val difference = truncate(((actual - start) / 1000).toDouble()).toInt()
+    fun calculateTimestamp(diff: Long){
+        val difference = truncate((diff / 1000).toDouble()).toInt()
         this.seconds = difference % 60
 
         val min = truncate((difference / 60).toDouble()).toInt()
@@ -165,9 +144,17 @@ class TimerActivity : AppCompatActivity() {
 
         convertAndPutOnView()
 
-        val isRunning = preferences!!.getBoolean("timerIsRunning", false)
-
-        if(isRunning)
+        if(this.timerIsRunning)
             startTimer(fab_play)
+    }
+
+    fun normalizePreferences() {
+        val editor = preferences!!.edit()
+
+        editor.putLong("timerTimestamp", this.timerTimestamp)
+        editor.putBoolean("timerIsRunning", this.timerIsRunning)
+        editor.putLong("timerSum", this.timerSum)
+
+        editor.commit()
     }
 }
