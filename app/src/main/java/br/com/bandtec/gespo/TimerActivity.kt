@@ -1,12 +1,16 @@
 package br.com.bandtec.gespo
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -51,11 +55,32 @@ class TimerActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             })
 
+        sp_options.setSelection(1)
+        sp_options.setOnItemSelectedListener(
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if(id.equals(0L)){
+                        val intent = Intent(applicationContext, CounterActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+            }
+        )
+
         preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
         checkTimeStamp()
     }
 
-    fun abrirFiltro(v: View) {
+    fun selectItem() {
 
     }
 
