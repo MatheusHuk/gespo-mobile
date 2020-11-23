@@ -80,8 +80,8 @@ class TimerActivity : AppCompatActivity() {
         checkTimeStamp()
     }
 
-    fun selectItem() {
-
+    override fun onBackPressed() {
+        //Crime ocorre, nada acontece Feijoada
     }
 
     fun startTimer(v: View) {
