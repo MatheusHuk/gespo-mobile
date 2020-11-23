@@ -3,21 +3,26 @@ package br.com.bandtec.gespo
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.widget.LinearLayout.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
+import android.widget.LinearLayout.TEXT_ALIGNMENT_CENTER
 import androidx.core.view.marginTop
 import br.com.bandtec.gespo.model.Project
+import br.com.bandtec.gespo.model.TimeEntry
 import br.com.bandtec.gespo.model.dashboards.ManagerDashOne
 import br.com.bandtec.gespo.requests.ProjectRequest
+import br.com.bandtec.gespo.requests.TimeEntryRequest
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_timesheet_consult.*
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,8 +64,6 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
             val getProject = projectRequest.getProjectsByEmployee(cookie,id)
 
-
-
             getProject.enqueue(object:Callback<List<Project>> {
                 override fun onFailure(call: Call<List<Project>>, t: Throwable) {
                     TODO("Not yet implemented")
@@ -77,6 +80,73 @@ class TimesheetConsultActivity : AppCompatActivity() {
                     sp_projeto.adapter = ArrayAdapter(applicationContext,
                         R.layout.support_simple_spinner_dropdown_item,
                         projects)
+                }
+            })
+
+            val timeEntryRequest = api.create(TimeEntryRequest::class.java)
+
+            val getTimeEntry = timeEntryRequest.getTimeEntriesByEmployee(cookie,id)
+
+            getTimeEntry.enqueue(object:Callback<List<TimeEntry>>{
+                override fun onFailure(call: Call<List<TimeEntry>>, t: Throwable) {
+                    Toast.makeText(applicationContext, "deu ruim", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onResponse(
+                    call: Call<List<TimeEntry>>,
+                    response: Response<List<TimeEntry>>
+                ) {
+                    Toast.makeText(applicationContext, "code: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    response.body()?.forEach{timeEntry ->
+                        val tblRow = TableRow(applicationContext)
+
+                        val txtProject = TextView(applicationContext)
+                        val txtDate = TextView(applicationContext)
+                        val txtHours = TextView(applicationContext)
+                        val btDelete = Button(applicationContext)
+
+                        val tableRowParams = TableRow.LayoutParams(
+                            LayoutParams.MATCH_PARENT,
+                            (applicationContext.getResources().getDisplayMetrics().density * 10).toInt()
+
+                        )
+
+                        val textViewParams = TableRow.LayoutParams(
+                            LayoutParams.WRAP_CONTENT,
+                            LayoutParams.WRAP_CONTENT
+                        )
+
+                        textViewParams.gravity = Gravity.CENTER
+
+                        tblRow.layoutParams = tableRowParams
+                        txtProject.layoutParams = textViewParams
+                        txtDate.layoutParams = textViewParams
+                        txtHours.layoutParams = textViewParams
+                        btDelete.layoutParams = textViewParams
+
+                        txtProject.text = timeEntry.project.name
+                        txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
+                        txtProject.setTextColor(Color.BLACK)
+
+                        txtDate.text = timeEntry.creationDate.toString()
+                        txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
+                        txtDate.setTextColor(Color.BLACK)
+
+                        txtHours.text = timeEntry.amountHours.toString()
+                        txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
+                        txtHours.setTextColor(Color.BLACK)
+
+                        btDelete.text = "teste"
+                        btDelete.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
+                        btDelete.setTextColor(Color.BLACK)
+
+                        tblRow.addView(txtProject)
+                        tblRow.addView(txtDate)
+                        tblRow.addView(txtHours)
+                        tblRow.addView(btDelete)
+
+                        tl_tabela_consulta.addView(tblRow)
+                    }
                 }
             })
 
@@ -116,7 +186,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
         else{
         //ajustando o table layout na tela para se adequar as mudanças
         //criando uma variável do tipo Layout Params
-        params.topMargin = TypedValue.COMPLEX_UNIT_DIP * 480
+        params.topMargin = TypedValue.COMPLEX_UNIT_DIP * 510
         sv_scroll.layoutParams = params
 
         sv_scroll.invalidate()

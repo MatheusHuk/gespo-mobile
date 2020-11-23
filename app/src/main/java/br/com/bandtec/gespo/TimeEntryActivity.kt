@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.model.CostCenter
 import br.com.bandtec.gespo.model.Project
@@ -26,11 +27,12 @@ class TimeEntryActivity : AppCompatActivity() {
     val costCenters = mutableListOf<String>()
 
     val projects = mutableListOf<String>()
+  
+    var estadoFiltro = false
 
     var cookie:String = ""
     var name:String = ""
     var id:Int = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,5 +87,18 @@ class TimeEntryActivity : AppCompatActivity() {
                 changeActivity(item ,this.applicationContext)
                 return@OnNavigationItemSelectedListener true
             })
+    }
+    fun abrirFiltro(componente: View){
+        if(estadoFiltro){
+            v_fundo_form_top.visibility = View.GONE
+            v_fundo_form_bottom.visibility = View.GONE
+
+            estadoFiltro = false
+        }else{
+            v_fundo_form_top.visibility = View.VISIBLE
+            v_fundo_form_bottom.visibility = View.VISIBLE
+
+            estadoFiltro = true
+        }
     }
 }

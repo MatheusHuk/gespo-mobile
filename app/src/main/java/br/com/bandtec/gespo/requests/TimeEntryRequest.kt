@@ -10,6 +10,6 @@ interface TimeEntryRequest {
     @GET("/work-schedules/employee?")
     fun getTimeEntriesByEmployee(
         @Header("Cookie") cookie:String,
-        @Query("id") id:Int
+        @Query("employeeId") id:Int
     ):Call<List<TimeEntry>>
 }
