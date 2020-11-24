@@ -23,7 +23,7 @@
     <string name="details">Details</string>
     <string name="hours">Hours</string>
     <string name="actions">Actions</string>
-    <string name="hours_total">Hours Total</string>
+    <string name="hours_total">Hours Total:</string>
     <string name="Cpf">CPF</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
