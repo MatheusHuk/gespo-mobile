@@ -31,6 +31,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class TimesheetConsultActivity : AppCompatActivity() {
 
+    var qtdTotalDeHoras = 0.0
+
     var preferences: SharedPreferences? = null
 
     val projects = mutableListOf<String>()
@@ -96,7 +98,6 @@ class TimesheetConsultActivity : AppCompatActivity() {
                     call: Call<List<TimeEntry>>,
                     response: Response<List<TimeEntry>>
                 ) {
-                    Toast.makeText(applicationContext, "code: ${response.code()}", Toast.LENGTH_SHORT).show()
                     response.body()?.forEach{timeEntry ->
                         val tblRow = TableRow(applicationContext)
 
@@ -125,19 +126,21 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         btDelete.layoutParams = textViewParams
 
                         txtProject.text = timeEntry.project.name
-                        txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
+                        txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 9).toFloat())
                         txtProject.setTextColor(Color.BLACK)
 
-                        txtDate.text = timeEntry.creationDate.toString()
-                        txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
+                        txtDate.text = "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
+                        txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 9).toFloat())
                         txtDate.setTextColor(Color.BLACK)
 
                         txtHours.text = timeEntry.amountHours.toString()
-                        txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
+                        txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 9).toFloat())
                         txtHours.setTextColor(Color.BLACK)
 
-                        btDelete.text = "teste"
-                        btDelete.setTextSize((TypedValue.COMPLEX_UNIT_SP * 8).toFloat())
+                        qtdTotalDeHoras += timeEntry.amountHours
+
+                        btDelete.text = "Deletar"
+                        btDelete.setTextSize((TypedValue.COMPLEX_UNIT_SP * 9).toFloat())
                         btDelete.setTextColor(Color.BLACK)
 
                         tblRow.addView(txtProject)
@@ -146,9 +149,12 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         tblRow.addView(btDelete)
 
                         tl_tabela_consulta.addView(tblRow)
+
                     }
+                    tv_qtd_hora_total.text = qtdTotalDeHoras.toString()
                 }
             })
+
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_apontamentos
