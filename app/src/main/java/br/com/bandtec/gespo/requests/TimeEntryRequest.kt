@@ -1,7 +1,9 @@
 package br.com.bandtec.gespo.requests
 
 import br.com.bandtec.gespo.model.TimeEntry
+import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -13,5 +15,9 @@ interface TimeEntryRequest {
         @Query("employeeId") id:Int
     ):Call<List<TimeEntry>>
 
-
+    @DELETE("/work-schedules?")
+    fun deleteTimeEntryById(
+        @Header("Cookie") cookie:String,
+        @Query("id") id:Int
+    ):Call<ResponseBody>
 }
