@@ -20,8 +20,10 @@ import br.com.bandtec.gespo.model.dashboards.ManagerDashOne
 import br.com.bandtec.gespo.requests.ProjectRequest
 import br.com.bandtec.gespo.requests.TimeEntryRequest
 import br.com.bandtec.gespo.utils.changeActivity
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_timesheet_consult.*
+import okhttp3.ResponseBody
 import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,9 +45,23 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
     var estadoFiltro = false
 
+    val api = Retrofit.Builder()
+        .baseUrl("https://gespo-rest.azurewebsites.net/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val projectRequest = api.create(ProjectRequest::class.java)
+
+    val timeEntryRequest = api.create(TimeEntryRequest::class.java)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timesheet_consult)
+
+        Glide.with(this)
+            .load(R.mipmap.ring)
+            .asGif()
+            .into(loadingImage);
 
         preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
 
@@ -56,13 +72,6 @@ class TimesheetConsultActivity : AppCompatActivity() {
             sp_periodo.adapter = ArrayAdapter(this,
             R.layout.support_simple_spinner_dropdown_item,
             resources.getStringArray(R.array.periodos))
-
-            val api = Retrofit.Builder()
-            .baseUrl("https://gespo-rest.azurewebsites.net/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-            val projectRequest = api.create(ProjectRequest::class.java)
 
             val getProject = projectRequest.getProjectsByEmployee(cookie,id)
 
@@ -85,13 +94,11 @@ class TimesheetConsultActivity : AppCompatActivity() {
                 }
             })
 
-            val timeEntryRequest = api.create(TimeEntryRequest::class.java)
-
             val getTimeEntry = timeEntryRequest.getTimeEntriesByEmployee(cookie,id)
 
             getTimeEntry.enqueue(object:Callback<List<TimeEntry>>{
                 override fun onFailure(call: Call<List<TimeEntry>>, t: Throwable) {
-                    Toast.makeText(applicationContext, "deu ruim", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onResponse(
@@ -104,20 +111,17 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         val txtProject = TextView(applicationContext)
                         val txtDate = TextView(applicationContext)
                         val txtHours = TextView(applicationContext)
-                        val btDelete = Button(applicationContext)
+                        val btDelete = ImageButton(applicationContext)
 
                         val tableRowParams = TableRow.LayoutParams(
                             LayoutParams.MATCH_PARENT,
-                            (applicationContext.getResources().getDisplayMetrics().density * 10).toInt()
-
+                            LayoutParams.WRAP_CONTENT
                         )
 
                         val textViewParams = TableRow.LayoutParams(
                             LayoutParams.WRAP_CONTENT,
                             LayoutParams.WRAP_CONTENT
                         )
-
-                        textViewParams.gravity = Gravity.CENTER
 
                         tblRow.layoutParams = tableRowParams
                         txtProject.layoutParams = textViewParams
@@ -126,22 +130,27 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         btDelete.layoutParams = textViewParams
 
                         txtProject.text = timeEntry.project.name
-                        txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 9).toFloat())
+                        txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                         txtProject.setTextColor(Color.BLACK)
+                        txtProject.gravity = Gravity.CENTER
 
                         txtDate.text = "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
-                        txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 9).toFloat())
+                        txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                         txtDate.setTextColor(Color.BLACK)
+                        txtDate.gravity = Gravity.CENTER
 
                         txtHours.text = timeEntry.amountHours.toString()
-                        txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 9).toFloat())
+                        txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                         txtHours.setTextColor(Color.BLACK)
+                        txtHours.gravity = Gravity.CENTER
 
                         qtdTotalDeHoras += timeEntry.amountHours
 
-                        btDelete.text = "Deletar"
-                        btDelete.setTextSize((TypedValue.COMPLEX_UNIT_SP * 9).toFloat())
-                        btDelete.setTextColor(Color.BLACK)
+                        btDelete.setImageResource(R.drawable.ic_baseline_delete_18);
+                        btDelete.id = timeEntry.id
+
+                        btDelete.setOnClickListener{ view -> deleteTimeEntry(view)}
+                        //btDelete.setBackgroundColor(Color.parseColor("#7A7A7A"))
 
                         tblRow.addView(txtProject)
                         tblRow.addView(txtDate)
@@ -152,6 +161,9 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
                     }
                     tv_qtd_hora_total.text = qtdTotalDeHoras.toString()
+
+                    loading.visibility = View.GONE
+                    cl_tela_inteira.visibility = View.VISIBLE
                 }
             })
 
@@ -214,6 +226,24 @@ class TimesheetConsultActivity : AppCompatActivity() {
     fun goToTimeEntry(v: View){
         val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
         startActivity(timeEntryActivity)
+    }
+
+    fun deleteTimeEntry(v:View){
+
+        val deleteTimeEntry = timeEntryRequest.deleteTimeEntryById(cookie,v.id)
+
+        deleteTimeEntry.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Toast.makeText(applicationContext, "${response.code()}", Toast.LENGTH_SHORT).show()
+
+                val timeConsultActivity = Intent(applicationContext, TimesheetConsultActivity::class.java)
+                startActivity(timeConsultActivity)
+            }
+        })
     }
 
 }
