@@ -69,9 +69,9 @@ class TimesheetConsultActivity : AppCompatActivity() {
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
 
-            sp_periodo.adapter = ArrayAdapter(this,
-            R.layout.support_simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.periodos))
+//            sp_periodo.adapter = ArrayAdapter(this,
+//            R.layout.support_simple_spinner_dropdown_item,
+//            resources.getStringArray(R.array.periodos))
 
             val getProject = projectRequest.getProjectsByEmployee(cookie,id)
 
@@ -156,6 +156,8 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         tblRow.addView(txtDate)
                         tblRow.addView(txtHours)
                         tblRow.addView(btDelete)
+
+                        tl_tabela_consulta.removeAllViews()
 
                         tl_tabela_consulta.addView(tblRow)
 
