@@ -12,7 +12,6 @@ import br.com.bandtec.gespo.requests.ProjectRequest
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_time_entry.*
-import kotlinx.android.synthetic.main.activity_timesheet_consult.*
 import kotlinx.android.synthetic.main.activity_timesheet_consult.sp_projeto
 import retrofit2.Call
 import retrofit2.Callback

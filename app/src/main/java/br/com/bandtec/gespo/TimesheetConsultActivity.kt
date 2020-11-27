@@ -33,11 +33,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class TimesheetConsultActivity : AppCompatActivity() {
 
+    lateinit var projetoSelecionado: Spinner
+
     var qtdTotalDeHoras = 0.0
 
     var preferences: SharedPreferences? = null
 
-    val projects = mutableListOf<String>()
+    var projects: Array<String> = emptyArray()
+
+    var projectList = mutableListOf<Project>()
 
     var cookie:String = ""
     var name:String = ""
@@ -69,9 +73,9 @@ class TimesheetConsultActivity : AppCompatActivity() {
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
 
-            sp_periodo.adapter = ArrayAdapter(this,
-            R.layout.support_simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.periodos))
+//            sp_periodo.adapter = ArrayAdapter(this,
+//            R.layout.support_simple_spinner_dropdown_item,
+//            resources.getStringArray(R.array.periodos))
 
             val getProject = projectRequest.getProjectsByEmployee(cookie,id)
 
@@ -85,12 +89,25 @@ class TimesheetConsultActivity : AppCompatActivity() {
                     response: Response<List<Project>>
                 ) {
                     response.body()?.forEach{project ->
-                        projects.add(project.name)
-
+                        projects = response.body()!!.map { project -> project.name }.toTypedArray()
+                        projectList.add(project)
                     }
-                    sp_projeto.adapter = ArrayAdapter(applicationContext,
+
+                    projetoSelecionado = findViewById(R.id.sp_projeto)
+                    val adapter = ArrayAdapter(
+                        applicationContext,
                         R.layout.support_simple_spinner_dropdown_item,
-                        projects)
+                        projects
+                    )
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    projetoSelecionado.adapter = adapter
+                    projetoSelecionado.onItemSelectedListener = sp_projeto.onItemSelectedListener
+
+
+
+//                    sp_projeto.adapter = ArrayAdapter(applicationContext,
+//                    R.layout.support_simple_spinner_dropdown_item,
+//                    projects)
                 }
             })
 
@@ -158,7 +175,6 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         tblRow.addView(btDelete)
 
                         tl_tabela_consulta.addView(tblRow)
-
                     }
                     tv_qtd_hora_total.text = qtdTotalDeHoras.toString()
 
@@ -191,7 +207,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
             //ajustando o table layout na tela para se adequar as mudanças
             //criando uma variável do tipo Layout Params
-            params.topMargin = TypedValue.COMPLEX_UNIT_DIP *280
+            params.topMargin = (applicationContext.getResources().getDisplayMetrics().density * 130).toInt()
             sv_scroll.layoutParams = params
 
             sv_scroll.invalidate()
@@ -204,7 +220,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
         else{
         //ajustando o table layout na tela para se adequar as mudanças
         //criando uma variável do tipo Layout Params
-        params.topMargin = TypedValue.COMPLEX_UNIT_DIP * 510
+        params.topMargin = (applicationContext.getResources().getDisplayMetrics().density * 260).toInt()
         sv_scroll.layoutParams = params
 
         sv_scroll.invalidate()
@@ -245,5 +261,9 @@ class TimesheetConsultActivity : AppCompatActivity() {
             }
         })
     }
+
+//    fun filterTimeEntry(v:View){
+//        val filterTimeEntry = timeEntryRequest.getTimeEntriesByFilters(cookie,)
+//    }
 
 }

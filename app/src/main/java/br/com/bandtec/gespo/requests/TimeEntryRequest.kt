@@ -20,4 +20,12 @@ interface TimeEntryRequest {
         @Header("Cookie") cookie:String,
         @Query("id") id:Int
     ):Call<ResponseBody>
+
+    @GET("/work-schedules/filter?")
+    fun getTimeEntriesByFilters(
+        @Header("Cookie") cookie: String,
+        @Query("projectId") projectId:Int,
+        @Query("employeeId") id:Int,
+        @Query("date") date: String
+    ):Call<List<TimeEntry>>
 }
