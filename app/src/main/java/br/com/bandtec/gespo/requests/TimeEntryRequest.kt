@@ -26,6 +26,6 @@ interface TimeEntryRequest {
         @Header("Cookie") cookie: String,
         @Query("projectId") projectId:Int,
         @Query("employeeId") id:Int,
-        @Query("date") date: String
+        @Query("date") date: String?
     ):Call<List<TimeEntry>>
 }

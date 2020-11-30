@@ -1,6 +1,7 @@
 package br.com.bandtec.gespo
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -12,6 +13,11 @@ import br.com.bandtec.gespo.requests.ProjectRequest
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_time_entry.*
+import kotlinx.android.synthetic.main.activity_time_entry.cl_tela_inteira
+import kotlinx.android.synthetic.main.activity_time_entry.loading
+import kotlinx.android.synthetic.main.activity_time_entry.v_fundo_form_bottom
+import kotlinx.android.synthetic.main.activity_time_entry.v_fundo_form_top
+import kotlinx.android.synthetic.main.activity_timesheet_consult.*
 import kotlinx.android.synthetic.main.activity_timesheet_consult.sp_projeto
 import retrofit2.Call
 import retrofit2.Callback
@@ -99,5 +105,20 @@ class TimeEntryActivity : AppCompatActivity() {
 
             estadoFiltro = true
         }
+    }
+
+    fun logOff(v:View){
+        loading.visibility = View.VISIBLE
+        cl_tela_inteira.visibility = View.GONE
+
+        val editor = preferences?.edit()
+
+        editor?.remove("id")
+        editor?.remove("username")
+        editor?.remove("cookie")
+        editor?.commit()
+
+        val loginActivity = Intent(this, LoginActivity::class.java)
+        startActivity(loginActivity)
     }
 }
