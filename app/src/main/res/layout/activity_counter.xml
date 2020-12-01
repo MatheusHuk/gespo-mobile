@@ -43,8 +43,60 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="15dp"
             android:layout_marginRight="30dp"
-            android:background="@color/primaryLightGrey"/>
+            android:background="@color/primaryLightGrey"
+            android:onClick="logOff"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Menu de baixo -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+
+        app:itemBackground="@color/primaryLightGrey"
+        app:itemIconTint="@color/item_color_selector"
+        app:itemTextColor="@color/item_color_selector"
+        android:id="@id/nav_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu"
+        tools:ignore="DuplicateIds" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="55dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:id="@+id/loading"
+            android:elevation="100dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:src="@mipmap/ring"
+                android:id="@+id/loadingImage"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:id="@+id/cl_tela_inteira">
 
         <!-- contador -->
         <TextView
@@ -100,22 +152,6 @@
             android:layout_marginTop="10dp"
             tools:ignore="MissingConstraints" />
 
-        <!-- Menu de baixo -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-
-            app:itemBackground="@color/primaryLightGrey"
-            app:itemIconTint="@color/item_color_selector"
-            app:itemTextColor="@color/item_color_selector"
-            android:id="@+id/nav_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu" />
 
     <!-- text help -->
         <TextView
@@ -136,7 +172,7 @@
             android:layout_marginTop="21dp"
             app:layout_editor_absoluteX="100dp"
             android:src="@drawable/ic_alarm"
-            app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+            app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="icon of clock"
             tools:ignore="MissingConstraints"
             />
@@ -147,7 +183,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/sp_options"
             android:entries="@array/options"
-            app:layout_constraintTop_toBottomOf="@id/v_top_menu"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="18dp"/>
@@ -157,13 +193,12 @@
             android:id="@+id/iv_gespo_config"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="110dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginRight="40dp"
             android:onClick="abrirFiltro"
             android:src="@mipmap/config"
-            app:layout_constraintTop_toBottomOf="@id/v_top_menu"
             tools:ignore="MissingConstraints"
             />
 
@@ -179,22 +214,8 @@
             tools:ignore="MissingConstraints"
             />
 
-        <!-- Menu de baixo -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            app:itemBackground="@color/primaryLightGrey"
-            app:itemIconTint="@color/item_color_selector"
-            app:itemTextColor="@color/item_color_selector"
-            android:id="@+id/nav_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu"
-            tools:ignore="DuplicateIds" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
