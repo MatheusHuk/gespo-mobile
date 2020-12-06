@@ -270,7 +270,7 @@
         android:id="@+id/tv_txt_detalhes"
         />
 
-        <ScrollView
+        <NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="400dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -375,7 +375,7 @@
 
         </LinearLayout>
 
-        </ScrollView>
+        </NestedScrollView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
