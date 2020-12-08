@@ -64,4 +64,8 @@ class CounterActivity : AppCompatActivity() {
         startActivity(loginActivity)
     }
 
+    override fun onBackPressed() {
+        //Nothing occurs
+    }
+
 }

@@ -443,4 +443,8 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        //Nothing occurs
+    }
+
 }

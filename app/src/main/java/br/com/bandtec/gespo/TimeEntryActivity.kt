@@ -121,4 +121,9 @@ class TimeEntryActivity : AppCompatActivity() {
         val loginActivity = Intent(this, LoginActivity::class.java)
         startActivity(loginActivity)
     }
+
+    override fun onBackPressed() {
+        val timesheetConsultActivity = Intent(this, TimesheetConsultActivity::class.java)
+        startActivity(timesheetConsultActivity)
+    }
 }
