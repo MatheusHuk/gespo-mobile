@@ -6,10 +6,15 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.view.View
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import br.com.bandtec.gespo.model.CostCenter
+import br.com.bandtec.gespo.model.Employee
 import br.com.bandtec.gespo.model.Project
+import br.com.bandtec.gespo.model.TimeEntryDTO
+import br.com.bandtec.gespo.requests.EmployeeRequest
 import br.com.bandtec.gespo.requests.ProjectRequest
+import br.com.bandtec.gespo.requests.TimeEntryRequest
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_time_entry.*
@@ -17,8 +22,7 @@ import kotlinx.android.synthetic.main.activity_time_entry.cl_tela_inteira
 import kotlinx.android.synthetic.main.activity_time_entry.loading
 import kotlinx.android.synthetic.main.activity_time_entry.v_fundo_form_bottom
 import kotlinx.android.synthetic.main.activity_time_entry.v_fundo_form_top
-import kotlinx.android.synthetic.main.activity_timesheet_consult.*
-import kotlinx.android.synthetic.main.activity_timesheet_consult.sp_projeto
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,12 +36,29 @@ class TimeEntryActivity : AppCompatActivity() {
     val costCenters = mutableListOf<String>()
 
     val projects = mutableListOf<String>()
+
+    val projectsList = mutableListOf<Project>()
   
     var estadoFiltro = false
+
+    var user : Employee? = null
 
     var cookie:String = ""
     var name:String = ""
     var id:Int = 0
+
+    val api = Retrofit.Builder()
+        .baseUrl("https://gespo-rest.azurewebsites.net/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+
+    val projectRequest = api.create(ProjectRequest::class.java)
+
+    val timeEntryRequest = api.create(TimeEntryRequest::class.java)
+
+    val employeeRequest = api.create(EmployeeRequest::class.java)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,14 +72,6 @@ class TimeEntryActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_apontamentos
-
-        val api = Retrofit.Builder()
-            .baseUrl("https://gespo-rest.azurewebsites.net/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-
-        val projectRequest = api.create(ProjectRequest::class.java)
 
         val getProject = projectRequest.getProjectsByEmployee(cookie,id)
 
@@ -74,6 +87,7 @@ class TimeEntryActivity : AppCompatActivity() {
                 response.body()?.forEach{project ->
                         projects.add(project.name)
                         costCenters.add(project.costCenter.name)
+                        projectsList.add(project)
 
                 }
                 sp_projeto.adapter = ArrayAdapter(applicationContext,
@@ -83,6 +97,61 @@ class TimeEntryActivity : AppCompatActivity() {
                 sp_costCenter.adapter = ArrayAdapter(applicationContext,
                         R.layout.support_simple_spinner_dropdown_item,
                         costCenters)
+
+                val getEmployee = employeeRequest.getEmployee(cookie, id)
+
+                getEmployee.enqueue(object : Callback<Employee>{
+                    override fun onFailure(call: Call<Employee>, t: Throwable) {
+                        Toast.makeText(baseContext, "Erro: $t", Toast.LENGTH_SHORT).show()
+
+                    }
+
+                    override fun onResponse(
+                        call: Call<Employee>,
+                        response: Response<Employee>
+
+                    ) {
+
+                        user = response.body()!!
+                        loading.visibility = View.GONE
+                        cl_tela_inteira.visibility = View.VISIBLE
+
+                    }
+                })
+
+                sp_projeto.setOnItemSelectedListener(
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            et_projetao_pt.text = sp_projeto.selectedItem.toString()
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+                            TODO("Not yet implemented")
+                        }
+                    }
+                )
+
+                sp_costCenter.setOnItemSelectedListener(
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+                            TODO("Not yet implemented")
+                        }
+                    }
+                )
             }
         })
 
@@ -107,6 +176,7 @@ class TimeEntryActivity : AppCompatActivity() {
         }
     }
 
+
     fun logOff(v:View){
         loading.visibility = View.VISIBLE
         cl_tela_inteira.visibility = View.GONE
@@ -120,5 +190,35 @@ class TimeEntryActivity : AppCompatActivity() {
 
         val loginActivity = Intent(this, LoginActivity::class.java)
         startActivity(loginActivity)
+
+
+
+    fun gravarApontamento(v:View){
+        val dataBruta = et_data.text.toString()
+        val creationDate: IntArray = intArrayOf(dataBruta.substring(4,8).toInt(), dataBruta.substring(2,4).toInt(), dataBruta.substring(0,2).toInt())
+        val amountHours = (et_hora.text.toString().toInt() + (et_minuto.text.toString().toInt()/60)).toDouble()
+        val project:Project = projectsList.filter { proj -> proj.name.equals(et_projetao_pt.text)}.first()
+        val dswork = et_observacao.text.toString()
+
+        val timeEntry = TimeEntryDTO(user!!, creationDate, amountHours, project, dswork)
+        val callCreateTimeEntry = timeEntryRequest.createTimeEntry(cookie, mutableListOf<TimeEntryDTO>(timeEntry))
+
+
+        callCreateTimeEntry.enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(baseContext, "Erro: $t", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Toast.makeText(baseContext, "Apontamento criado com sucesso! : ${response.code()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, "Olá ${response.body().toString()}", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+
+        }
     }
+
 }
