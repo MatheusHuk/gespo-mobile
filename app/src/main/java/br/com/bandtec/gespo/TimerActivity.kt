@@ -99,17 +99,23 @@ class TimerActivity : AppCompatActivity() {
     }
 
     fun stopTimer(v: View) {
-//        if (timerIsRunning) {
-//            timer.cancel()
-//            timerIsRunning = false
-//        }
-//        val editor = preferences?.edit()
-//        editor?.remove("timerTimestamp")
-//        editor?.remove("timerIsRunning")
-//        editor?.commit()
-//
-//        val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
-//        startActivity(timeEntryActivity)
+        this.timer.cancel()
+        this.timerIsRunning = false
+        this.timerTimestamp = 0L
+        this.timerSum = 0L
+        this.normalizePreferences()
+    }
+
+    fun resetTimer(v: View) {
+        this.timer.cancel()
+        this.timerIsRunning = false
+        this.timerTimestamp = 0L
+        this.timerSum = 0L
+        this.hours = 0
+        this.minutes = 0
+        this.seconds = 0
+        this.convertAndPutOnView()
+        this.normalizePreferences()
     }
 
     fun addSecond() {
