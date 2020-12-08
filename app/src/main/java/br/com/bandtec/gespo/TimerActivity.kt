@@ -14,7 +14,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_timer.*
+import kotlinx.android.synthetic.main.activity_timer.loading
+import kotlinx.android.synthetic.main.activity_timer.tv_username
 import kotlin.math.truncate
 
 class TimerActivity : AppCompatActivity() {
@@ -60,6 +63,8 @@ class TimerActivity : AppCompatActivity() {
         id = preferences?.getInt("id", 0)!!.toInt()
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
+
+        tv_username.text = name
 
         //esse é o código do spinner
         //ele ta puxando lá do arquivo strings.xml as opções

@@ -19,7 +19,11 @@ import br.com.bandtec.gespo.requests.TimeEntryRequest
 import br.com.bandtec.gespo.utils.changeActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_timesheet_consult.*
+import kotlinx.android.synthetic.main.activity_timesheet_consult.loading
+import kotlinx.android.synthetic.main.activity_timesheet_consult.loadingImage
+import kotlinx.android.synthetic.main.activity_timesheet_consult.tv_username
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -68,6 +72,8 @@ class TimesheetConsultActivity : AppCompatActivity() {
         id = preferences?.getInt("id", 0)!!.toInt()
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
+
+        tv_username.text = name
 
 //            sp_periodo.adapter = ArrayAdapter(this,
 //            R.layout.support_simple_spinner_dropdown_item,

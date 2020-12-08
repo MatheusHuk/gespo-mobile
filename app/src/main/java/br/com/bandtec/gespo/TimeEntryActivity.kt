@@ -17,8 +17,6 @@ import kotlinx.android.synthetic.main.activity_time_entry.cl_tela_inteira
 import kotlinx.android.synthetic.main.activity_time_entry.loading
 import kotlinx.android.synthetic.main.activity_time_entry.v_fundo_form_bottom
 import kotlinx.android.synthetic.main.activity_time_entry.v_fundo_form_top
-import kotlinx.android.synthetic.main.activity_timesheet_consult.*
-import kotlinx.android.synthetic.main.activity_timesheet_consult.sp_projeto
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,6 +46,8 @@ class TimeEntryActivity : AppCompatActivity() {
         id = preferences?.getInt("id", 0)!!.toInt()
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
+
+        tv_username.text = name
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_apontamentos
