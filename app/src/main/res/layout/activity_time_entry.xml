@@ -98,8 +98,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="55dp">
+        android:layout_marginTop="0dp">
 
         <ImageView
             android:id="@+id/iv_gespo_timer"
