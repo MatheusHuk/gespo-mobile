@@ -16,6 +16,8 @@ import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_timer.*
 import kotlin.math.truncate
+import kotlinx.android.synthetic.main.activity_timer.cl_tela_inteira
+import kotlinx.android.synthetic.main.activity_timer.loading
 
 class TimerActivity : AppCompatActivity() {
 
@@ -27,6 +29,9 @@ class TimerActivity : AppCompatActivity() {
     private var timerTimestamp: Long = 0
     private var timerIsRunning = false
     private var timerSum: Long = 0
+    var cookie:String = ""
+    var name:String = ""
+    var id:Int = 0
 
     val timer = object : CountDownTimer((24 * 60 * 60 * 1000), 1000) {
         override fun onTick(millisUntilFinished: Long) {
@@ -38,17 +43,33 @@ class TimerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_timer
+
         sp_options.adapter = ArrayAdapter(
             this,
             R.layout.support_simple_spinner_dropdown_item,
             resources.getStringArray(R.array.options)
         )
+
+        preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
+
+        id = preferences?.getInt("id", 0)!!.toInt()
+        name = preferences?.getString("username", "").toString()
+        cookie = preferences?.getString("cookie", "").toString()
+
+        //esse é o código do spinner
+        //ele ta puxando lá do arquivo strings.xml as opções
+        sp_options.adapter = ArrayAdapter(this,
+        R.layout.support_simple_spinner_dropdown_item,
+        resources.getStringArray(R.array.options))
+
         navView.setOnNavigationItemSelectedListener(
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
                 changeActivity(item, this.applicationContext)
@@ -180,6 +201,22 @@ class TimerActivity : AppCompatActivity() {
         editor.putBoolean("timerIsRunning", this.timerIsRunning)
         editor.putLong("timerSum", this.timerSum)
 
+
         editor.commit()
+    }
+
+    fun logOff(v:View){
+        loading.visibility = View.VISIBLE
+        cl_tela_inteira.visibility = View.GONE
+
+        val editor = preferences?.edit()
+
+        editor?.remove("id")
+        editor?.remove("username")
+        editor?.remove("cookie")
+        editor?.commit()
+
+        val loginActivity = Intent(this, LoginActivity::class.java)
+        startActivity(loginActivity)
     }
 }
