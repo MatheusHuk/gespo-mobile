@@ -16,6 +16,7 @@ import br.com.bandtec.gespo.requests.EmployeeRequest
 import br.com.bandtec.gespo.requests.ProjectRequest
 import br.com.bandtec.gespo.requests.TimeEntryRequest
 import br.com.bandtec.gespo.utils.changeActivity
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_time_entry.*
 import kotlinx.android.synthetic.main.activity_time_entry.cl_tela_inteira
@@ -63,6 +64,11 @@ class TimeEntryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_time_entry)
+
+        Glide.with(this)
+            .load(R.mipmap.ring)
+            .asGif()
+            .into(loadingImage);
 
         preferences = getSharedPreferences("Gespo", Context.MODE_PRIVATE)
 
@@ -128,6 +134,8 @@ class TimeEntryActivity : AppCompatActivity() {
                             id: Long
                         ) {
                             et_projetao_pt.text = sp_projeto.selectedItem.toString()
+                            val project:Project = projectsList.filter { proj -> proj.name.equals(et_projetao_pt.text)}.first()
+                            et_manager.text = project.manager.name.toString()
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) {
