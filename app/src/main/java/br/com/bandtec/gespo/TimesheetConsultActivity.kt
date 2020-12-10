@@ -7,11 +7,14 @@ import android.graphics.Color
 import android.widget.LinearLayout.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.widget.doOnTextChanged
 import br.com.bandtec.gespo.model.Project
 import br.com.bandtec.gespo.model.TimeEntry
 import br.com.bandtec.gespo.requests.ProjectRequest
@@ -43,9 +46,9 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
     var projectList = mutableListOf<Project>()
 
-    var cookie:String = ""
-    var name:String = ""
-    var id:Int = 0
+    var cookie: String = ""
+    var name: String = ""
+    var id: Int = 0
 
     var estadoFiltro = false
 
@@ -75,103 +78,150 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
         tv_username.text = name
 
-//            sp_periodo.adapter = ArrayAdapter(this,
-//            R.layout.support_simple_spinner_dropdown_item,
-//            resources.getStringArray(R.array.periodos))
+        et_data.addTextChangedListener(object: TextWatcher{
+            var isUpdating = false
+            var oldString = ""
 
-            val getProject = projectRequest.getProjectsByEmployee(cookie,id)
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-            getProject.enqueue(object:Callback<List<Project>> {
-                override fun onFailure(call: Call<List<Project>>, t: Throwable) {
-                    TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val str = s.toString().replace("/", "")
+                val mask = "##/##/####"
+                var cpfWithMask = ""
+
+                if (count == 0)//is deleting
+                    isUpdating = true
+
+                if (isUpdating){
+                    oldString = str
+                    isUpdating = false
+                    return
                 }
 
-                override fun onResponse(
-                    call: Call<List<Project>>,
-                    response: Response<List<Project>>
-                ) {
-                    projects = response.body()!!.map { project -> project.name }.toTypedArray()
-                    response.body()?.forEach{project ->
-                        projectList.add(project)
+                var i = 0
+                for (m : Char in mask.toCharArray()){
+                    if (!m.equals('#') && str.length > oldString.length){
+                        cpfWithMask += m
+                        continue
                     }
+                    try {
+                        cpfWithMask += str.get(i)
+                    }catch (e : Exception){
+                        break
+                    }
+                    i++
+                }
 
-                    sp_projeto.adapter = ArrayAdapter(applicationContext,
+                isUpdating = true
+                et_data.setText(cpfWithMask)
+                et_data.setSelection(cpfWithMask.length)
+
+            }
+        })
+
+        val getProject = projectRequest.getProjectsByEmployee(cookie, id)
+
+        getProject.enqueue(object : Callback<List<Project>> {
+            override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(
+                call: Call<List<Project>>,
+                response: Response<List<Project>>
+            ) {
+                projects = response.body()!!.map { project -> project.name }.toTypedArray()
+                response.body()?.forEach { project ->
+                    projectList.add(project)
+                }
+
+                sp_projeto.adapter = ArrayAdapter(
+                    applicationContext,
                     android.R.layout.simple_spinner_dropdown_item,
-                    projects)
+                    projects
+                )
+            }
+        })
+
+        val getTimeEntry = timeEntryRequest.getTimeEntriesByEmployee(cookie, id)
+
+        getTimeEntry.enqueue(object : Callback<List<TimeEntry>> {
+            override fun onFailure(call: Call<List<TimeEntry>>, t: Throwable) {
+                Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            override fun onResponse(
+                call: Call<List<TimeEntry>>,
+                response: Response<List<TimeEntry>>
+            ) {
+                response.body()?.forEach { timeEntry ->
+                    val tblRow = TableRow(applicationContext)
+
+                    val txtProject = TextView(applicationContext)
+                    val txtDate = TextView(applicationContext)
+                    val txtHours = TextView(applicationContext)
+                    val btDelete = ImageButton(applicationContext)
+
+                    val tableRowParams = TableRow.LayoutParams(
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT
+                    )
+
+                    val textViewParams = TableRow.LayoutParams(
+                        LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT
+                    )
+
+                    tblRow.layoutParams = tableRowParams
+                    txtProject.layoutParams = textViewParams
+                    txtDate.layoutParams = textViewParams
+                    txtHours.layoutParams = textViewParams
+                    btDelete.layoutParams = textViewParams
+
+                    txtProject.text = timeEntry.project.name
+                    txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
+                    txtProject.setTextColor(Color.BLACK)
+                    txtProject.gravity = Gravity.CENTER
+
+                    txtDate.text =
+                        "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
+                    txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
+                    txtDate.setTextColor(Color.BLACK)
+                    txtDate.gravity = Gravity.CENTER
+
+                    txtHours.text = timeEntry.amountHours.toString()
+                    txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
+                    txtHours.setTextColor(Color.BLACK)
+                    txtHours.gravity = Gravity.CENTER
+
+                    qtdTotalDeHoras += timeEntry.amountHours
+
+                    btDelete.setImageResource(R.drawable.ic_baseline_delete_18);
+                    btDelete.id = timeEntry.id
+
+                    btDelete.setOnClickListener { view -> deleteTimeEntry(view) }
+                    //btDelete.setBackgroundColor(Color.parseColor("#7A7A7A"))
+
+                    tblRow.addView(txtProject)
+                    tblRow.addView(txtDate)
+                    tblRow.addView(txtHours)
+                    tblRow.addView(btDelete)
+
+                    tl_tabela_consulta.addView(tblRow)
                 }
-            })
+                tv_qtd_hora_total.text = qtdTotalDeHoras.toString()
 
-            val getTimeEntry = timeEntryRequest.getTimeEntriesByEmployee(cookie,id)
-
-            getTimeEntry.enqueue(object:Callback<List<TimeEntry>>{
-                override fun onFailure(call: Call<List<TimeEntry>>, t: Throwable) {
-                    Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onResponse(
-                    call: Call<List<TimeEntry>>,
-                    response: Response<List<TimeEntry>>
-                ) {
-                    response.body()?.forEach{timeEntry ->
-                        val tblRow = TableRow(applicationContext)
-
-                        val txtProject = TextView(applicationContext)
-                        val txtDate = TextView(applicationContext)
-                        val txtHours = TextView(applicationContext)
-                        val btDelete = ImageButton(applicationContext)
-
-                        val tableRowParams = TableRow.LayoutParams(
-                            LayoutParams.MATCH_PARENT,
-                            LayoutParams.WRAP_CONTENT
-                        )
-
-                        val textViewParams = TableRow.LayoutParams(
-                            LayoutParams.WRAP_CONTENT,
-                            LayoutParams.WRAP_CONTENT
-                        )
-
-                        tblRow.layoutParams = tableRowParams
-                        txtProject.layoutParams = textViewParams
-                        txtDate.layoutParams = textViewParams
-                        txtHours.layoutParams = textViewParams
-                        btDelete.layoutParams = textViewParams
-
-                        txtProject.text = timeEntry.project.name
-                        txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
-                        txtProject.setTextColor(Color.BLACK)
-                        txtProject.gravity = Gravity.CENTER
-
-                        txtDate.text = "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
-                        txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
-                        txtDate.setTextColor(Color.BLACK)
-                        txtDate.gravity = Gravity.CENTER
-
-                        txtHours.text = timeEntry.amountHours.toString()
-                        txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
-                        txtHours.setTextColor(Color.BLACK)
-                        txtHours.gravity = Gravity.CENTER
-
-                        qtdTotalDeHoras += timeEntry.amountHours
-
-                        btDelete.setImageResource(R.drawable.ic_baseline_delete_18);
-                        btDelete.id = timeEntry.id
-
-                        btDelete.setOnClickListener{ view -> deleteTimeEntry(view)}
-                        //btDelete.setBackgroundColor(Color.parseColor("#7A7A7A"))
-
-                        tblRow.addView(txtProject)
-                        tblRow.addView(txtDate)
-                        tblRow.addView(txtHours)
-                        tblRow.addView(btDelete)
-
-                        tl_tabela_consulta.addView(tblRow)
-                    }
-                    tv_qtd_hora_total.text = qtdTotalDeHoras.toString()
-
-                    loading.visibility = View.GONE
-                    cl_tela_inteira.visibility = View.VISIBLE
-                }
-            })
+                loading.visibility = View.GONE
+                cl_tela_inteira.visibility = View.VISIBLE
+            }
+        })
 
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -179,13 +229,14 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
         navView.setOnNavigationItemSelectedListener(
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                changeActivity(item ,this.applicationContext)
+                changeActivity(item, this.applicationContext)
                 return@OnNavigationItemSelectedListener true
             })
     }
 
-    fun abrirFiltro(componente:View){
-        val params: ViewGroup.MarginLayoutParams = sv_scroll.layoutParams as ViewGroup.MarginLayoutParams
+    fun abrirFiltro(componente: View) {
+        val params: ViewGroup.MarginLayoutParams =
+            sv_scroll.layoutParams as ViewGroup.MarginLayoutParams
 
         if (estadoFiltro) {
             //tornando os formulários do filtro de busca invisíveis
@@ -197,7 +248,8 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
             //ajustando o table layout na tela para se adequar as mudanças
             //criando uma variável do tipo Layout Params
-            params.topMargin = (applicationContext.getResources().getDisplayMetrics().density * 130).toInt()
+            params.topMargin =
+                (applicationContext.getResources().getDisplayMetrics().density * 130).toInt()
             sv_scroll.layoutParams = params
 
             sv_scroll.invalidate()
@@ -206,20 +258,20 @@ class TimesheetConsultActivity : AppCompatActivity() {
             tv_txt_detalhes.visibility = View.VISIBLE
 
             estadoFiltro = false
-        }
-        else{
-        //ajustando o table layout na tela para se adequar as mudanças
-        //criando uma variável do tipo Layout Params
-        params.topMargin = (applicationContext.getResources().getDisplayMetrics().density * 260).toInt()
-        sv_scroll.layoutParams = params
-            
+        } else {
+            //ajustando o table layout na tela para se adequar as mudanças
+            //criando uma variável do tipo Layout Params
+            params.topMargin =
+                (applicationContext.getResources().getDisplayMetrics().density * 260).toInt()
+            sv_scroll.layoutParams = params
 
-        //tornando os formulários do filtro de busca visíveis
-        v_fundo_form_top.visibility = View.VISIBLE
-        v_fundo_form_bottom.visibility = View.VISIBLE
 
-        //tornando a linha invisível para se adequar a estilização do app
-        iv_gespo_line.visibility = View.GONE
+            //tornando os formulários do filtro de busca visíveis
+            v_fundo_form_top.visibility = View.VISIBLE
+            v_fundo_form_bottom.visibility = View.VISIBLE
+
+            //tornando a linha invisível para se adequar a estilização do app
+            iv_gespo_line.visibility = View.GONE
 
             tv_txt_detalhes.visibility = View.GONE
             estadoFiltro = true
@@ -227,30 +279,32 @@ class TimesheetConsultActivity : AppCompatActivity() {
         }
     }
 
-    fun goToTimeEntry(v: View){
+    fun goToTimeEntry(v: View) {
         val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
         startActivity(timeEntryActivity)
     }
 
-    fun deleteTimeEntry(v:View){
+    fun deleteTimeEntry(v: View) {
 
-        val deleteTimeEntry = timeEntryRequest.deleteTimeEntryById(cookie,v.id)
+        val deleteTimeEntry = timeEntryRequest.deleteTimeEntryById(cookie, v.id)
 
         deleteTimeEntry.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Toast.makeText(applicationContext, "${response.code()}", Toast.LENGTH_SHORT).show()
 
-                val timeConsultActivity = Intent(applicationContext, TimesheetConsultActivity::class.java)
+                val timeConsultActivity =
+                    Intent(applicationContext, TimesheetConsultActivity::class.java)
                 startActivity(timeConsultActivity)
             }
         })
     }
 
-    fun logOff(v:View){
+    fun logOff(v: View) {
         loading.visibility = View.VISIBLE
         cl_tela_inteira.visibility = View.GONE
 
@@ -265,23 +319,36 @@ class TimesheetConsultActivity : AppCompatActivity() {
         startActivity(loginActivity)
     }
 
-    fun filterTimeEntry(v:View){
+    fun filterTimeEntry(v: View) {
         loading.visibility = View.VISIBLE
         cl_tela_inteira.visibility = View.GONE
 
         var contTitle = 0
-        if(!sp_projeto.selectedItem.toString().isEmpty()){
-        val nomeProjeto = sp_projeto.selectedItem.toString()
-        val projSlc:Project = projectList.filter { proj -> proj.name.equals(nomeProjeto)}.first()
-            val filterTimeEntry:Call<List<TimeEntry>>
-        if(!et_data.text.toString().isEmpty()){
-            filterTimeEntry = timeEntryRequest.getTimeEntriesByFilters(cookie,projSlc.id,id,et_data.text.toString())
-        }else{
-             filterTimeEntry = timeEntryRequest.getTimeEntriesByFilters(cookie,projSlc.id,id,null)
-        }
-            filterTimeEntry.enqueue(object:Callback<List<TimeEntry>>{
+        if (!sp_projeto.selectedItem.toString().isEmpty()) {
+            val nomeProjeto = sp_projeto.selectedItem.toString()
+            val projSlc: Project =
+                projectList.filter { proj -> proj.name.equals(nomeProjeto) }.first()
+            val filterTimeEntry: Call<List<TimeEntry>>
+            if (!et_data.text.toString().isEmpty() && et_data.text.toString().length == 10) {
+                var date: Array<String> = et_data.text.toString().split("/").toTypedArray()
+                var realDate = "${date[2]}-${date[1]}-${date[0]}"
+                filterTimeEntry = timeEntryRequest.getTimeEntriesByFilters(
+                    cookie,
+                    projSlc.id,
+                    id,
+                    realDate
+                )
+            } else {
+                filterTimeEntry =
+                    timeEntryRequest.getTimeEntriesByFilters(cookie, projSlc.id, id, null)
+            }
+            filterTimeEntry.enqueue(object : Callback<List<TimeEntry>> {
                 override fun onFailure(call: Call<List<TimeEntry>>, t: Throwable) {
-                    Toast.makeText(applicationContext, "Algo de errado aconteceu!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Algo de errado aconteceu!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
                 override fun onResponse(
@@ -289,7 +356,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
                     response: Response<List<TimeEntry>>
                 ) {
                     tl_tabela_consulta.removeAllViews()
-                    response.body()?.forEach{timeEntry ->
+                    response.body()?.forEach { timeEntry ->
                         var tblRow = TableRow(applicationContext)
 
                         val txtProjectTitle = TextView(applicationContext)
@@ -324,7 +391,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
                         txtHours.layoutParams = textViewParams
                         btDelete.layoutParams = textViewParams
 
-                        if(contTitle == 0){
+                        if (contTitle == 0) {
 
                             txtProjectTitle.text = "Project"
                             txtProjectTitle.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
@@ -362,7 +429,8 @@ class TimesheetConsultActivity : AppCompatActivity() {
                             txtProject.setTextColor(Color.BLACK)
                             txtProject.gravity = Gravity.CENTER
 
-                            txtDate.text = "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
+                            txtDate.text =
+                                "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
                             txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                             txtDate.setTextColor(Color.BLACK)
                             txtDate.gravity = Gravity.CENTER
@@ -377,7 +445,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
                             btDelete.setImageResource(R.drawable.ic_baseline_delete_18);
                             btDelete.id = timeEntry.id
 
-                            btDelete.setOnClickListener{ view -> deleteTimeEntry(view)}
+                            btDelete.setOnClickListener { view -> deleteTimeEntry(view) }
                             //btDelete.setBackgroundColor(Color.parseColor("#7A7A7A"))
 
                             tblRow.addView(txtProject)
@@ -387,46 +455,51 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
                             tl_tabela_consulta.addView(tblRow)
 
-                        }else{
+                        } else {
 
-                        txtProject.text = timeEntry.project.name
-                        txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
-                        txtProject.setTextColor(Color.BLACK)
-                        txtProject.gravity = Gravity.CENTER
+                            txtProject.text = timeEntry.project.name
+                            txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
+                            txtProject.setTextColor(Color.BLACK)
+                            txtProject.gravity = Gravity.CENTER
 
-                        txtDate.text = "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
-                        txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
-                        txtDate.setTextColor(Color.BLACK)
-                        txtDate.gravity = Gravity.CENTER
+                            txtDate.text =
+                                "${timeEntry.creationDate[2]}/${timeEntry.creationDate[1]}/${timeEntry.creationDate[0]}"
+                            txtDate.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
+                            txtDate.setTextColor(Color.BLACK)
+                            txtDate.gravity = Gravity.CENTER
 
-                        txtHours.text = timeEntry.amountHours.toString()
-                        txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
-                        txtHours.setTextColor(Color.BLACK)
-                        txtHours.gravity = Gravity.CENTER
+                            txtHours.text = timeEntry.amountHours.toString()
+                            txtHours.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
+                            txtHours.setTextColor(Color.BLACK)
+                            txtHours.gravity = Gravity.CENTER
 
-                        qtdTotalDeHoras += timeEntry.amountHours
+                            qtdTotalDeHoras += timeEntry.amountHours
 
-                        btDelete.setImageResource(R.drawable.ic_baseline_delete_18);
-                        btDelete.id = timeEntry.id
+                            btDelete.setImageResource(R.drawable.ic_baseline_delete_18);
+                            btDelete.id = timeEntry.id
 
-                        btDelete.setOnClickListener{ view -> deleteTimeEntry(view)}
-                        //btDelete.setBackgroundColor(Color.parseColor("#7A7A7A"))
+                            btDelete.setOnClickListener { view -> deleteTimeEntry(view) }
+                            //btDelete.setBackgroundColor(Color.parseColor("#7A7A7A"))
 
-                        tblRow.addView(txtProject)
-                        tblRow.addView(txtDate)
-                        tblRow.addView(txtHours)
-                        tblRow.addView(btDelete)
+                            tblRow.addView(txtProject)
+                            tblRow.addView(txtDate)
+                            tblRow.addView(txtHours)
+                            tblRow.addView(btDelete)
 
-                        tl_tabela_consulta.addView(tblRow)
-                    }
+                            tl_tabela_consulta.addView(tblRow)
+                        }
                     }
                     loading.visibility = View.GONE
                     cl_tela_inteira.visibility = View.VISIBLE
-                    }
+                }
 
             })
-        }else{
-            Toast.makeText(applicationContext, "Preencha os dados de forma correta !", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                applicationContext,
+                "Preencha os dados de forma correta !",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }
