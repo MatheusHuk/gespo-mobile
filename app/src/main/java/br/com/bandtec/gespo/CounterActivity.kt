@@ -89,6 +89,9 @@ class CounterActivity : AppCompatActivity(){
         // Criar o Broadcast para mudar o Front
         this.registerBroadcastFront()
 
+        loading.visibility = View.GONE
+        cl_tela_inteira.visibility = View.VISIBLE
+
     }
 
     fun logOff(v: View) {
