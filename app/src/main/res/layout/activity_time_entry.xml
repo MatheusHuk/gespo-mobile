@@ -417,8 +417,8 @@
 
             <Button
                 android:id="@+id/bt_gravar"
-                android:layout_width="80dp"
-                android:layout_height="20dp"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="20dp"
                 android:background="#2B47AA"
                 android:text="GRAVAR"
