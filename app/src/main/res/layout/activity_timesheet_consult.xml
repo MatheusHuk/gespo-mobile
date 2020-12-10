@@ -74,7 +74,7 @@
             android:background="@android:color/white"
             android:id="@+id/loading"
             android:elevation="100dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="300dp"
@@ -91,7 +91,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/cl_tela_inteira">
 
     <ImageView
@@ -180,7 +180,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="3dp"
         android:id="@+id/v_fundo_form_bottom"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -226,6 +226,20 @@
             android:layout_marginTop="25dp"
             android:layout_marginRight="25dp"
             android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/clear"
+            android:textColor="#FFFFFF"
+            android:background="#2B47AA"
+            app:layout_constraintTop_toBottomOf="@id/sp_projeto"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="25dp"
+            android:onClick="clearFilter"
+            />
 
         <Button
             android:id="@+id/iv_filtro"
