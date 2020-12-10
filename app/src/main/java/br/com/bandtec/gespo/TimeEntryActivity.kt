@@ -185,7 +185,7 @@ class TimeEntryActivity : AppCompatActivity() {
     }
 
 
-    fun logOff(v:View){
+    fun logOff(v:View) {
         loading.visibility = View.VISIBLE
         cl_tela_inteira.visibility = View.GONE
 
@@ -199,6 +199,7 @@ class TimeEntryActivity : AppCompatActivity() {
         val loginActivity = Intent(this, LoginActivity::class.java)
         startActivity(loginActivity)
 
+    }
 
 
     fun gravarApontamento(v:View){
@@ -219,14 +220,13 @@ class TimeEntryActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Toast.makeText(baseContext, "Apontamento criado com sucesso! : ${response.code()}", Toast.LENGTH_SHORT).show()
-                Toast.makeText(baseContext, "Olá ${response.body().toString()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, "Apontamento criado com sucesso!", Toast.LENGTH_SHORT).show()
             }
 
         })
 
 
-        }
+
     }
 
 }
