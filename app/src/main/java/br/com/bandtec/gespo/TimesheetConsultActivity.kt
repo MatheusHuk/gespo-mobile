@@ -90,26 +90,14 @@ class TimesheetConsultActivity : AppCompatActivity() {
                     call: Call<List<Project>>,
                     response: Response<List<Project>>
                 ) {
+                    projects = response.body()!!.map { project -> project.name }.toTypedArray()
                     response.body()?.forEach{project ->
-                        projects = response.body()!!.map { project -> project.name }.toTypedArray()
                         projectList.add(project)
                     }
 
-                    projetoSelecionado = findViewById(R.id.sp_projeto)
-                    val adapter = ArrayAdapter(
-                        applicationContext,
-                        R.layout.support_simple_spinner_dropdown_item,
-                        projects
-                    )
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    projetoSelecionado.adapter = adapter
-                    projetoSelecionado.onItemSelectedListener = sp_projeto.onItemSelectedListener
-
-
-
-//                    sp_projeto.adapter = ArrayAdapter(applicationContext,
-//                    R.layout.support_simple_spinner_dropdown_item,
-//                    projects)
+                    sp_projeto.adapter = ArrayAdapter(applicationContext,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    projects)
                 }
             })
 

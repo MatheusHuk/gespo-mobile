@@ -217,14 +217,13 @@
             android:background="#FFFFFF" />
 
         <Spinner
-            android:id="@+id/sp_projeto"
             android:layout_width="150dp"
             android:layout_height="25dp"
-            android:spinnerMode="dropdown"
+            android:id="@+id/sp_projeto"
             app:layout_constraintTop_toTopOf="@id/tv_texto_projeto"
-            android:layout_marginTop="25dp"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginEnd="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="25dp"
             android:background="#FFFFFF" />
 
         <Button
