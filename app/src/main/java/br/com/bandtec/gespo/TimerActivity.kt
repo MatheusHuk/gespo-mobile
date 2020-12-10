@@ -124,8 +124,7 @@ class TimerActivity : AppCompatActivity() {
     fun stopTimer(v: View) {
         this.timer.cancel()
         this.timerIsRunning = false
-        this.timerTimestamp = 0L
-        this.timerSum = 0L
+        this.timerSum = (this.seconds * 1000 + (this.minutes * 60000) + (this.hours * 3600000)).toLong()
         this.normalizePreferences()
     }
 
