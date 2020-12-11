@@ -34,9 +34,9 @@ class TimeEntryActivity : AppCompatActivity() {
 
     var preferences: SharedPreferences? = null
 
-    val costCenters = mutableListOf<String>()
+    var costCenters : Array<String> = emptyArray()
 
-    val projects = mutableListOf<String>()
+    var projects : Array<String> = emptyArray()
 
     val projectsList = mutableListOf<Project>()
   
@@ -90,19 +90,19 @@ class TimeEntryActivity : AppCompatActivity() {
                 call: Call<List<Project>>,
                 response: Response<List<Project>>
             ) {
-                response.body()?.forEach{project ->
-                        projects.add(project.name)
-                        costCenters.add(project.costCenter.name)
-                        projectsList.add(project)
+                projects = response.body()!!.map { p -> p.name }.toTypedArray()
+                costCenters = response.body()!!.map { p -> p.costCenter.name }.toTypedArray()
 
+                response.body()?.forEach{project ->
+                        projectsList.add(project)
                 }
                 sp_projeto.adapter = ArrayAdapter(applicationContext,
-                    R.layout.support_simple_spinner_dropdown_item,
+                    android.R.layout.simple_spinner_dropdown_item,
                     projects)
 
                 sp_costCenter.adapter = ArrayAdapter(applicationContext,
-                        R.layout.support_simple_spinner_dropdown_item,
-                        costCenters)
+                    android.R.layout.simple_spinner_dropdown_item,
+                    costCenters)
 
                 val getEmployee = employeeRequest.getEmployee(cookie, id)
 
@@ -203,6 +203,9 @@ class TimeEntryActivity : AppCompatActivity() {
 
 
     fun gravarApontamento(v:View){
+        loading.visibility = View.VISIBLE
+        loading.visibility = View.GONE
+
         val dataBruta = et_data.text.toString()
         val creationDate: IntArray = intArrayOf(dataBruta.substring(4,8).toInt(), dataBruta.substring(2,4).toInt(), dataBruta.substring(0,2).toInt())
         val amountHours = (et_hora.text.toString().toInt() + (et_minuto.text.toString().toInt()/60)).toDouble()
@@ -221,6 +224,8 @@ class TimeEntryActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Toast.makeText(baseContext, "Apontamento criado com sucesso!", Toast.LENGTH_SHORT).show()
+                loading.visibility = View.GONE
+                loading.visibility = View.VISIBLE
             }
 
         })
