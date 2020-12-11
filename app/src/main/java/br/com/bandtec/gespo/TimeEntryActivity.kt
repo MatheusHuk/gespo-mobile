@@ -207,7 +207,7 @@ class TimeEntryActivity : AppCompatActivity() {
 
     fun gravarApontamento(v:View){
         loading.visibility = View.VISIBLE
-        loading.visibility = View.GONE
+        cl_tela_inteira.visibility = View.GONE
 
         val dataBruta = et_data.text.toString()
         val creationDate: IntArray = intArrayOf(dataBruta.substring(4,8).toInt(), dataBruta.substring(2,4).toInt(), dataBruta.substring(0,2).toInt())
@@ -228,7 +228,7 @@ class TimeEntryActivity : AppCompatActivity() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Toast.makeText(baseContext, "Apontamento criado com sucesso!", Toast.LENGTH_SHORT).show()
                 loading.visibility = View.GONE
-                loading.visibility = View.VISIBLE
+                cl_tela_inteira.visibility = View.VISIBLE
             }
 
         })

@@ -43,7 +43,6 @@ class SplashActivity : AppCompatActivity() {
                 val loginActivity = Intent(this, LoginActivity::class.java)
                 startActivity(loginActivity)
             }else{
-                //Toast.makeText(applicationContext, "OfflineId: $offlineId", Toast.LENGTH_SHORT).show()
                 val login = employeeRequests.login(preferences?.getString("cpf", "").toString(), preferences?.getString("pass", "").toString())
 
                 val context = this

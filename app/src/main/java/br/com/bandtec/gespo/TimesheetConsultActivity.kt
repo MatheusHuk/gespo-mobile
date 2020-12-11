@@ -153,8 +153,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
         getTimeEntry.enqueue(object : Callback<List<TimeEntry>> {
             override fun onFailure(call: Call<List<TimeEntry>>, t: Throwable) {
-                Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(
@@ -185,7 +184,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
                     txtHours.layoutParams = textViewParams
                     btDelete.layoutParams = textViewParams
 
-                    txtProject.text = timeEntry.project.name
+                    txtProject.text = formatText(timeEntry.project.name)
                     txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                     txtProject.setTextColor(Color.BLACK)
                     txtProject.gravity = Gravity.CENTER
@@ -290,13 +289,10 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
         deleteTimeEntry.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(applicationContext, "Algo de errado aconteceu !", Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Toast.makeText(applicationContext, "${response.code()}", Toast.LENGTH_SHORT).show()
-
                 val timeConsultActivity =
                     Intent(applicationContext, TimesheetConsultActivity::class.java)
                 startActivity(timeConsultActivity)
@@ -409,7 +405,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
                         tblRow = TableRow(applicationContext)
 
-                        txtProject.text = timeEntry.project.name
+                        txtProject.text = formatText(timeEntry.project.name)
                         txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                         txtProject.setTextColor(Color.BLACK)
                         txtProject.gravity = Gravity.CENTER
@@ -442,7 +438,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
                     } else {
 
-                        txtProject.text = timeEntry.project.name
+                        txtProject.text = formatText(timeEntry.project.name)
                         txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                         txtProject.setTextColor(Color.BLACK)
                         txtProject.gravity = Gravity.CENTER
@@ -588,7 +584,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
                             tblRow = TableRow(applicationContext)
 
-                            txtProject.text = timeEntry.project.name
+                            txtProject.text = formatText(timeEntry.project.name)
                             txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                             txtProject.setTextColor(Color.BLACK)
                             txtProject.gravity = Gravity.CENTER
@@ -621,7 +617,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
 
                         } else {
 
-                            txtProject.text = timeEntry.project.name
+                            txtProject.text = formatText(timeEntry.project.name)
                             txtProject.setTextSize((TypedValue.COMPLEX_UNIT_SP * 10.75).toFloat())
                             txtProject.setTextColor(Color.BLACK)
                             txtProject.gravity = Gravity.CENTER
@@ -667,6 +663,10 @@ class TimesheetConsultActivity : AppCompatActivity() {
             ).show()
         }
 
+    }
+
+    fun formatText(text: String): String{
+        return if(text.length >=8){ text.substring(0,7).plus("...") }else text
     }
 
     override fun onBackPressed() {
