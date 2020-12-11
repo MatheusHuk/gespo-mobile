@@ -7,6 +7,9 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
+import br.com.bandtec.gespo.model.TimeEntryDTO
+import retrofit2.Callback
+import retrofit2.http.*
 
 interface TimeEntryRequest {
     @GET("/work-schedules/employee?")
@@ -28,4 +31,12 @@ interface TimeEntryRequest {
         @Query("employeeId") id:Int,
         @Query("date") date: String?
     ):Call<List<TimeEntry>>
+
+    @POST("/work-schedules")
+    fun createTimeEntry(
+        @Header("Cookie") cookie: String,
+        @Body timeEntryDTO: List<TimeEntryDTO>
+    ):Call<ResponseBody>
+
+
 }
