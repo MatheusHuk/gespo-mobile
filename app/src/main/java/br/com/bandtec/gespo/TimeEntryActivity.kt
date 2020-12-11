@@ -76,6 +76,8 @@ class TimeEntryActivity : AppCompatActivity() {
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
 
+        tv_username.text = name
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_apontamentos
 
@@ -170,6 +172,7 @@ class TimeEntryActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             })
     }
+  
     fun abrirFiltro(componente: View){
         if(estadoFiltro){
             v_fundo_form_top.visibility = View.GONE
@@ -232,6 +235,11 @@ class TimeEntryActivity : AppCompatActivity() {
 
 
 
+    }
+  
+    override fun onBackPressed() {
+        val timesheetConsultActivity = Intent(this, TimesheetConsultActivity::class.java)
+        startActivity(timesheetConsultActivity)
     }
 
 }

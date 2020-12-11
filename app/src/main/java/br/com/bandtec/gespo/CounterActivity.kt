@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_counter.*
+import kotlinx.android.synthetic.main.activity_counter.loading
+import kotlinx.android.synthetic.main.activity_counter.tv_username
+import kotlinx.android.synthetic.main.activity_main.*
 
 class CounterActivity : AppCompatActivity() {
 
@@ -28,6 +31,8 @@ class CounterActivity : AppCompatActivity() {
         id = preferences?.getInt("id", 0)!!.toInt()
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
+
+        tv_username.text = name
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_timer
@@ -57,6 +62,10 @@ class CounterActivity : AppCompatActivity() {
 
         val loginActivity = Intent(this, LoginActivity::class.java)
         startActivity(loginActivity)
+    }
+
+    override fun onBackPressed() {
+        //Nothing occurs
     }
 
 }
