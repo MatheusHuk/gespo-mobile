@@ -74,7 +74,7 @@
             android:background="@android:color/white"
             android:id="@+id/loading"
             android:elevation="100dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="300dp"
@@ -91,7 +91,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/cl_tela_inteira">
 
     <ImageView
@@ -259,7 +259,7 @@
 
     <ImageView
         android:id="@+id/iv_gespo_line"
-        android:layout_width="370dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         app:layout_editor_absoluteX="20dp"

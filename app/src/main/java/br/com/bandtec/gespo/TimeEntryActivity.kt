@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.view.View
 import android.widget.AdapterView
@@ -20,9 +22,14 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_time_entry.*
 import kotlinx.android.synthetic.main.activity_time_entry.cl_tela_inteira
+import kotlinx.android.synthetic.main.activity_time_entry.et_data
 import kotlinx.android.synthetic.main.activity_time_entry.loading
+import kotlinx.android.synthetic.main.activity_time_entry.loadingImage
+import kotlinx.android.synthetic.main.activity_time_entry.sp_projeto
+import kotlinx.android.synthetic.main.activity_time_entry.tv_username
 import kotlinx.android.synthetic.main.activity_time_entry.v_fundo_form_bottom
 import kotlinx.android.synthetic.main.activity_time_entry.v_fundo_form_top
+import kotlinx.android.synthetic.main.activity_timesheet_consult.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -80,6 +87,53 @@ class TimeEntryActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_apontamentos
+
+        et_data.addTextChangedListener(object: TextWatcher {
+            var isUpdating = false
+            var oldString = ""
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val str = s.toString().replace("/", "")
+                val mask = "##/##/####"
+                var newString = ""
+
+                if (count == 0)//is deleting
+                    isUpdating = true
+
+                if (isUpdating){
+                    oldString = str
+                    isUpdating = false
+                    return
+                }
+
+                var i = 0
+                for (m : Char in mask.toCharArray()){
+                    if (!m.equals('#') && str.length > oldString.length){
+                        newString += m
+                        continue
+                    }
+                    try {
+                        newString += str.get(i)
+                    }catch (e : Exception){
+                        break
+                    }
+                    i++
+                }
+
+                isUpdating = true
+                et_data.setText(newString)
+                et_data.setSelection(newString.length)
+
+            }
+        })
 
         val getProject = projectRequest.getProjectsByEmployee(cookie,id)
 
@@ -209,8 +263,9 @@ class TimeEntryActivity : AppCompatActivity() {
         loading.visibility = View.VISIBLE
         cl_tela_inteira.visibility = View.GONE
 
+        // 10/12/2020
         val dataBruta = et_data.text.toString()
-        val creationDate: IntArray = intArrayOf(dataBruta.substring(4,8).toInt(), dataBruta.substring(2,4).toInt(), dataBruta.substring(0,2).toInt())
+        val creationDate: IntArray = intArrayOf(dataBruta.substring(6,10).toInt(), dataBruta.substring(3,5).toInt(), dataBruta.substring(0,2).toInt())
         val amountHours = (et_hora.text.toString().toInt() + (et_minuto.text.toString().toInt()/60)).toDouble()
         val project:Project = projectsList.filter { proj -> proj.name.equals(et_projetao_pt.text)}.first()
         val dswork = et_observacao.text.toString()

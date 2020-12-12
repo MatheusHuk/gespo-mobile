@@ -93,7 +93,7 @@ class TimesheetConsultActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val str = s.toString().replace("/", "")
                 val mask = "##/##/####"
-                var cpfWithMask = ""
+                var newString = ""
 
                 if (count == 0)//is deleting
                     isUpdating = true
@@ -107,11 +107,11 @@ class TimesheetConsultActivity : AppCompatActivity() {
                 var i = 0
                 for (m : Char in mask.toCharArray()){
                     if (!m.equals('#') && str.length > oldString.length){
-                        cpfWithMask += m
+                        newString += m
                         continue
                     }
                     try {
-                        cpfWithMask += str.get(i)
+                        newString += str.get(i)
                     }catch (e : Exception){
                         break
                     }
@@ -119,8 +119,8 @@ class TimesheetConsultActivity : AppCompatActivity() {
                 }
 
                 isUpdating = true
-                et_data.setText(cpfWithMask)
-                et_data.setSelection(cpfWithMask.length)
+                et_data.setText(newString)
+                et_data.setSelection(newString.length)
 
             }
         })
