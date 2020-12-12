@@ -126,6 +126,12 @@ class TimerActivity : AppCompatActivity() {
         this.timerIsRunning = false
         this.timerSum = (this.seconds * 1000 + (this.minutes * 60000) + (this.hours * 3600000)).toLong()
         this.normalizePreferences()
+
+        val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
+        timeEntryActivity.putExtra("hours", this.hours)
+        timeEntryActivity.putExtra("minutes", this.minutes)
+
+        startActivity(timeEntryActivity)
     }
 
     fun resetTimer(v: View) {

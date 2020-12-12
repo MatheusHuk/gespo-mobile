@@ -88,6 +88,14 @@ class TimeEntryActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_apontamentos
 
+        val hou = intent.extras?.getInt("hours")
+        val min = intent.extras?.getInt("minutes")
+
+        if(hou != null && min != null){
+            et_hora.setText(hou.toString())
+            et_minuto.setText(min.toString())
+        }
+
         et_data.addTextChangedListener(object: TextWatcher {
             var isUpdating = false
             var oldString = ""
