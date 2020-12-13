@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import br.com.bandtec.gespo.model.CostCenter
 import br.com.bandtec.gespo.model.Employee
 import br.com.bandtec.gespo.model.Project
 import br.com.bandtec.gespo.model.TimeEntryDTO
@@ -183,6 +184,20 @@ class TimeEntryActivity : AppCompatActivity() {
                     ) {
 
                         user = response.body()!!
+                        val selectedCostCenter: String = costCenters.get(0)
+
+                        projects = projectsList.filter { p -> p.costCenter.name.equals(selectedCostCenter) }
+                            .map{ p -> p.name }.toTypedArray()
+
+                        sp_projeto.adapter = ArrayAdapter(applicationContext,
+                            android.R.layout.simple_spinner_dropdown_item,
+                            projects)
+
+                        sp_projeto.setSelection(0)
+
+                        et_projetao_pt.text = projects.get(0)
+                        et_manager.text = projectsList.filter { p -> p.name.equals(projects.get(0)) }.get(0).manager.name
+
                         loading.visibility = View.GONE
                         cl_tela_inteira.visibility = View.VISIBLE
 
@@ -216,7 +231,18 @@ class TimeEntryActivity : AppCompatActivity() {
                             position: Int,
                             id: Long
                         ) {
+                            val selected = sp_costCenter.selectedItem.toString()
 
+                            projects = projectsList.filter { p -> p.costCenter.name.equals(selected) }
+                                .map { p -> p.name }.toTypedArray()
+
+                            sp_projeto.adapter = ArrayAdapter(applicationContext,
+                                android.R.layout.simple_spinner_dropdown_item,
+                                projects)
+
+                            sp_projeto.setSelection(0)
+
+                            et_projetao_pt.text = projects.get(0)
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) {
