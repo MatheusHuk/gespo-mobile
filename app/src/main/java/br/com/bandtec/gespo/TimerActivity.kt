@@ -14,8 +14,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_timer.*
+import kotlin.math.truncate
+import kotlinx.android.synthetic.main.activity_timer.cl_tela_inteira
 import kotlinx.android.synthetic.main.activity_timer.loading
 import kotlinx.android.synthetic.main.activity_timer.tv_username
 import kotlin.math.truncate
@@ -30,6 +31,9 @@ class TimerActivity : AppCompatActivity() {
     private var timerTimestamp: Long = 0
     private var timerIsRunning = false
     private var timerSum: Long = 0
+    var cookie:String = ""
+    var name:String = ""
+    var id:Int = 0
 
     val timer = object : CountDownTimer((24 * 60 * 60 * 1000), 1000) {
         override fun onTick(millisUntilFinished: Long) {
@@ -40,12 +44,10 @@ class TimerActivity : AppCompatActivity() {
             TODO("Not yet implemented")
         }
     }
-    var cookie:String = ""
-    var name:String = ""
-    var id:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer)
 
