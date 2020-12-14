@@ -6,4 +6,8 @@ interface CounterListener {
 
     fun setCounterTimer(counterTimer: Int)
 
+    fun getStartTime(): Int
+
+    fun isActive(): Boolean
+
 }

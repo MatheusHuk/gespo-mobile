@@ -9,6 +9,8 @@ import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.services.CounterService
 import br.com.bandtec.gespo.services.broadcasts.CounterBroadcastReceiver
@@ -31,6 +33,7 @@ class CounterActivity : AppCompatActivity(){
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as CounterService.CounterSvcController
             CounterSvcController = binder.getCountListener()
+            setEnableScrollNumberPickers(!CounterSvcController.isActive())
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
@@ -89,9 +92,11 @@ class CounterActivity : AppCompatActivity(){
         // Criar o Broadcast para mudar o Front
         this.registerBroadcastFront()
 
+        // Funçao que configura as "NumberPickers" com min/max Value
+        this.configureNumberPickers()
+
         loading.visibility = View.GONE
         cl_tela_inteira.visibility = View.VISIBLE
-
     }
 
     fun logOff(v: View) {
@@ -120,69 +125,79 @@ class CounterActivity : AppCompatActivity(){
         unregisterReceiver(this.counterBroadcastReceiver)
     }
 
-    fun startService () {
+    fun start (view: View) {
+        val seconds: Int = this.getSecondsOnView()
 
+        if(seconds != 0) {
+            this.setEnableScrollNumberPickers(false)
+            this.startService(seconds)
+        }
+
+        else
+            Toast.makeText(this, "Favor selecionar um número válido", Toast.LENGTH_SHORT).show()
+    }
+
+    fun pause (view: View) {
+        this.stopService()
+    }
+
+     fun stop (view: View) {
+        this.stopService()
+
+        this.CounterSvcController.setCounterTimer(0)
+
+        this.convertSecondsToStringTimerAndPutInView(0)
+        this.setEnableScrollNumberPickers(true)
+    }
+
+
+    private fun startService (seconds: Int) {
         Intent(this, CounterService::class.java).also { intent ->
             intent.action = "GESPO_COUNTER_SERVICE"
-            intent.putExtra("counterTimerValue", 90)
+            intent.putExtra("counterTimerValue", seconds)
             startService(intent)
+        }
+
+        this.bindCounterService()
+    }
+
+    private fun stopService () {
+        Intent(this, CounterService::class.java).also { intent ->
+            intent.action = "GESPO_COUNTER_SERVICE"
+            stopService(intent)
+        }
+    }
+
+    private fun configureNumberPickers() {
+        // Config Hours
+        np_hours.minValue = 0
+        np_hours.maxValue = 23
+
+        np_hours.setFormatter { value: Int ->
+            return@setFormatter String.format("%02d", value)
+        }
+
+        // Config Minutes
+        np_minutes.minValue = 0
+        np_minutes.maxValue = 59
+
+        np_minutes.setFormatter { value: Int ->
+            return@setFormatter String.format("%02d", value)
+        }
+
+        // Config Seconds
+        np_seconds.minValue = 0
+        np_seconds.maxValue = 59
+
+        np_seconds.setFormatter { value: Int ->
+            return@setFormatter String.format("%02d", value)
         }
 
     }
 
-   fun stopService () {
-
-       Intent(this, CounterService::class.java).also { intent ->
-           intent.action = "GESPO_COUNTER_SERVICE"
-           stopService(intent)
-       }
-
-    }
-
-    fun start (view: View) {
-        /*
-               Logica para INICIAR:
-        */
-
-        // 1 - Start Service:
-
-        this.startService()
-
-    }
-
-    fun pause (view: View) {
-        /*
-               Logica para PAUSAR:
-        */
-
-        // STOP SERVICE
-        this.stopService()
-
-        // Usamos this.CounterSvcController.getCounterTimer()) para guardar de onde parou
-        val currentTimer: Int = this.CounterSvcController.getCounterTimer()
-
-        Log.i("CounterActivity", "CounterTimer: $currentTimer")
-
-    }
-
-    fun stop (view: View) {
-        /*
-               Logica para PARAR:
-        */
-
-        // STOP SERVICE
-        this.stopService()
-
-        // Setamos o texto para 0
-        val currentTimer: Int = 0
-
-        Log.i("CounterActivity", "CounterTimer: $currentTimer")
-
-    }
-
-    fun registerBroadcastNotify() {
+    private fun registerBroadcastNotify() {
         this.counterNotifyBroadcastReceiver = CounterNotifyBroadcastReceiver()
-        val intentFilterNotify: IntentFilter = IntentFilter()
+        val intentFilterNotify = IntentFilter()
 
         intentFilterNotify.addAction("GESPO_COUNTER_NOTIFY")
         intentFilterNotify.addCategory(Intent.CATEGORY_DEFAULT)
@@ -190,43 +205,80 @@ class CounterActivity : AppCompatActivity(){
         registerReceiver(this.counterNotifyBroadcastReceiver, intentFilterNotify)
     }
 
-    fun registerBroadcastFront() {
+    private fun registerBroadcastFront() {
         this.counterBroadcastReceiver = CounterBroadcastReceiver()
-        val intentFilterFrontUpdate: IntentFilter = IntentFilter()
+        val intentFilterFrontUpdate = IntentFilter()
 
         intentFilterFrontUpdate.addAction("GESPO_COUNTER_FRONT")
         intentFilterFrontUpdate.addCategory(Intent.CATEGORY_DEFAULT)
         registerReceiver(this.counterBroadcastReceiver, intentFilterFrontUpdate)
     }
 
-    fun bindCounterService() {
+    private fun bindCounterService() {
         Intent(this, CounterService::class.java).also { intent ->
             bindService(intent, serviceConnection, 0)
         }
     }
 
-    fun convertSecondsToStringTimer(seconds: Int): String {
+    private fun convertSecondsToStringTimerAndPutInView(seconds: Int) {
 
-        var secondsFinal: Int = seconds % 60
+        val secondsFinal: Int = seconds % 60
 
         val minutesDiff: Int = truncate((seconds / 60).toDouble()).toInt()
-        var minutesFinal: Int = minutesDiff % 60
+        val minutesFinal: Int = minutesDiff % 60
 
         val hoursDiff: Int = truncate((minutesDiff / 60).toDouble()).toInt()
-        var hoursFinal: Int = hoursDiff
+        val hoursFinal: Int = hoursDiff
 
-        val secondsString: String = if(secondsFinal < 10) "0$secondsFinal" else secondsFinal.toString()
-        val minutesString: String = if(minutesFinal < 10) "0$minutesFinal" else minutesFinal.toString()
-        val hoursString: String = if(hoursFinal < 10) "0$hoursFinal" else hoursFinal.toString()
+        np_hours.value = hoursFinal
+        np_minutes.value = minutesFinal
+        np_seconds.value = secondsFinal
 
-        return "$hoursString:$minutesString:$secondsString"
+        tv_hours.text = String.format("%02d", hoursFinal)
+        tv_minutes.text = String.format("%02d", minutesFinal)
+        tv_seconds.text = String.format("%02d", secondsFinal)
+    }
+
+    private fun getSecondsOnView(): Int {
+        return (np_seconds.value + (np_minutes.value * 60) + (np_hours.value * 3600))
+    }
+
+    private fun setEnableScrollNumberPickers(enable: Boolean) {
+
+        this.convertSecondsToStringTimerAndPutInView(
+            this.getSecondsOnView()
+        )
+
+        np_hours.isEnabled = enable
+        np_minutes.isEnabled = enable
+        np_seconds.isEnabled = enable
+
+        setViewVisibility(enable)
+    }
+
+    private fun setViewVisibility(showViews: Boolean) {
+        if (showViews) {
+            np_hours.visibility = View.VISIBLE
+            np_minutes.visibility = View.VISIBLE
+            np_seconds.visibility = View.VISIBLE
+
+            cl_display_numbers.visibility = View.GONE
+        }
+        else {
+            np_hours.visibility = View.INVISIBLE
+            np_minutes.visibility = View.INVISIBLE
+            np_seconds.visibility = View.INVISIBLE
+
+            cl_display_numbers.visibility = View.VISIBLE
+        }
     }
 
     fun updateTextViewCounter() {
 
         val secondsThread: Int = this.CounterSvcController.getCounterTimer()
 
-        tv_counter.text = this.convertSecondsToStringTimer(secondsThread)
+        this.convertSecondsToStringTimerAndPutInView(secondsThread)
+        
     }
 
 }

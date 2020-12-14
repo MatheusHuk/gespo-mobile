@@ -10,6 +10,7 @@ import br.com.bandtec.gespo.services.listeners.CounterListener
 class CounterService() : Service(), CounterListener {
 
     private var isActive: Boolean = false
+    private var startTime: Int = 0
     private var counterTimer = 0
     private val counterSvcController: CounterSvcController = CounterSvcController()
     private var thread: Thread? = null
@@ -38,6 +39,7 @@ class CounterService() : Service(), CounterListener {
             this.counterTimer = intent!!.getIntExtra("counterTimerValue", 0)
             this.startThread()
         }
+
         return START_STICKY
     }
 
@@ -56,9 +58,10 @@ class CounterService() : Service(), CounterListener {
 
     fun startThread() {
 
-        val intentCounterFront: Intent = Intent("GESPO_COUNTER_FRONT")
+        val intentCounterFront = Intent("GESPO_COUNTER_FRONT")
 
         this.isActive = true
+        this.startTime = this.counterTimer
 
         Log.i("StartingThread", "CounterTimer: ${this.counterTimer}, IsActive: ${this.isActive}")
 
@@ -75,7 +78,9 @@ class CounterService() : Service(), CounterListener {
 
                 this.counterTimer--
 
-                sendBroadcast(intentCounterFront)
+                if(this.counterTimer != -1) {
+                    sendBroadcast(intentCounterFront)
+                }
 
                 Log.i("Thread", "CounterTimer: ${this.counterTimer}")
             }
@@ -99,6 +104,14 @@ class CounterService() : Service(), CounterListener {
 
     override fun setCounterTimer(counterTimer: Int) {
         this.counterTimer = counterTimer
+    }
+
+    override fun getStartTime(): Int {
+        return this.startTime
+    }
+
+    override fun isActive(): Boolean {
+        return this.isActive
     }
 
 }
