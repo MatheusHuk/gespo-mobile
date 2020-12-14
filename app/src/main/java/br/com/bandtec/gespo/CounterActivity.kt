@@ -21,7 +21,7 @@ import kotlin.math.truncate
 import kotlinx.android.synthetic.main.activity_counter.loading
 import kotlinx.android.synthetic.main.activity_counter.tv_username
 
-class CounterActivity : AppCompatActivity(){
+class CounterActivity : AppCompatActivity() {
 
     private lateinit var CounterSvcController: CounterListener
 
@@ -48,9 +48,9 @@ class CounterActivity : AppCompatActivity(){
         }
     }
 
-    var cookie:String = ""
-    var name:String = ""
-    var id:Int = 0
+    var cookie: String = ""
+    var name: String = ""
+    var id: Int = 0
 
     var preferences: SharedPreferences? = null
 
@@ -75,13 +75,15 @@ class CounterActivity : AppCompatActivity(){
 
         //Esse é o código do spinner
         //Ele ta puxando lá do arquivo strings.xml as opções
-        sp_options.adapter = ArrayAdapter(this,
-        R.layout.support_simple_spinner_dropdown_item,
-        resources.getStringArray(R.array.options))
+        sp_options.adapter = ArrayAdapter(
+            this,
+            R.layout.support_simple_spinner_dropdown_item,
+            resources.getStringArray(R.array.options)
+        )
 
         navView.setOnNavigationItemSelectedListener(
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                changeActivity(item ,this.applicationContext)
+                changeActivity(item, this.applicationContext)
                 return@OnNavigationItemSelectedListener true
             })
 
@@ -126,23 +128,21 @@ class CounterActivity : AppCompatActivity(){
         unregisterReceiver(this.counterBroadcastReceiver)
     }
 
-    fun start (view: View) {
+    fun start(view: View) {
         val seconds: Int = this.getSecondsOnView()
 
-        if(seconds != 0) {
+        if (seconds != 0) {
             this.setEnableScrollNumberPickers(false)
             this.startService(seconds)
-        }
-
-        else
+        } else
             Toast.makeText(this, "Favor selecionar um número válido", Toast.LENGTH_SHORT).show()
     }
 
-    fun pause (view: View) {
+    fun pause(view: View) {
         this.stopService()
     }
 
-     fun stop (view: View) {
+    fun stop(view: View) {
         this.stopService()
 
         this.CounterSvcController.setCounterTimer(0)
@@ -151,8 +151,26 @@ class CounterActivity : AppCompatActivity(){
         this.setEnableScrollNumberPickers(true)
     }
 
+    fun finish(view: View) {
+        this.pause(view)
 
-    private fun startService (seconds: Int) {
+        val seconds: Int = this.CounterSvcController.getStartTime() - this.getSecondsOnView()
+
+        val minutesDiff: Int = truncate((seconds / 60).toDouble()).toInt()
+        val minutesFinal: Int = minutesDiff % 60
+
+        val hoursDiff: Int = truncate((minutesDiff / 60).toDouble()).toInt()
+        val hoursFinal: Int = hoursDiff
+
+        val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
+        timeEntryActivity.putExtra("hours", hoursFinal)
+        timeEntryActivity.putExtra("minutes", minutesFinal)
+
+        startActivity(timeEntryActivity)
+    }
+
+
+    private fun startService(seconds: Int) {
         Intent(this, CounterService::class.java).also { intent ->
             intent.action = "GESPO_COUNTER_SERVICE"
             intent.putExtra("counterTimerValue", seconds)
@@ -162,7 +180,7 @@ class CounterActivity : AppCompatActivity(){
         this.bindCounterService()
     }
 
-    private fun stopService () {
+    private fun stopService() {
         Intent(this, CounterService::class.java).also { intent ->
             intent.action = "GESPO_COUNTER_SERVICE"
             stopService(intent)
@@ -264,8 +282,7 @@ class CounterActivity : AppCompatActivity(){
             np_seconds.visibility = View.VISIBLE
 
             cl_display_numbers.visibility = View.GONE
-        }
-        else {
+        } else {
             np_hours.visibility = View.INVISIBLE
             np_minutes.visibility = View.INVISIBLE
             np_seconds.visibility = View.INVISIBLE

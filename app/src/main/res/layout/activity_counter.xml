@@ -187,43 +187,54 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/fab_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="15dp"
-                android:backgroundTint="#2E6CA4"
-                android:onClick="start"
                 android:src="@drawable/ic_start"
-                app:fabSize="mini"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/np_minutes" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_pause"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                app:fabSize="normal"
                 android:backgroundTint="#2E6CA4"
-                android:onClick="pause"
-                android:src="@drawable/ic_pause"
-                app:fabSize="mini"
-                app:layout_constraintEnd_toStartOf="@+id/fab_stop"
-                app:layout_constraintStart_toEndOf="@+id/fab_play"
-                app:layout_constraintTop_toBottomOf="@+id/np_minutes" />
+                tools:ignore="MissingConstraints"
+                android:onClick="start"
+                android:layout_marginTop="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="@id/fab_pause"
+                app:layout_constraintTop_toBottomOf="@id/np_hours"
+                android:visibility="visible"/>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="100dp"
-                android:backgroundTint="#2E6CA4"
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="80dp"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/button_zerar"
                 android:onClick="stop"
-                android:src="@drawable/ic_stop"
-                app:fabSize="mini"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/np_minutes" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fab_play"
+                tools:ignore="MissingConstraints" />
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="80dp"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/button_finalizar"
+                android:onClick="finish"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fab_pause"
+                />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fab_pause"
+                android:src="@drawable/ic_pause"
+                app:fabSize="normal"
+                android:backgroundTint="#2E6CA4"
+                tools:ignore="MissingConstraints"
+                android:onClick="pause"
+                android:layout_marginTop="20dp"
+                app:layout_constraintLeft_toLeftOf="@id/fab_play"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/np_seconds"
+                android:visibility="visible"/>
 
             <ImageView
                 android:id="@+id/iv_gespo_line"
