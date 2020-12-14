@@ -18,6 +18,8 @@ import kotlinx.android.synthetic.main.activity_timer.*
 import kotlin.math.truncate
 import kotlinx.android.synthetic.main.activity_timer.cl_tela_inteira
 import kotlinx.android.synthetic.main.activity_timer.loading
+import kotlinx.android.synthetic.main.activity_timer.tv_username
+import kotlin.math.truncate
 
 class TimerActivity : AppCompatActivity() {
 
@@ -63,6 +65,8 @@ class TimerActivity : AppCompatActivity() {
         id = preferences?.getInt("id", 0)!!.toInt()
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
+
+        tv_username.text = name
 
         //esse é o código do spinner
         //ele ta puxando lá do arquivo strings.xml as opções
@@ -120,17 +124,28 @@ class TimerActivity : AppCompatActivity() {
     }
 
     fun stopTimer(v: View) {
-//        if (timerIsRunning) {
-//            timer.cancel()
-//            timerIsRunning = false
-//        }
-//        val editor = preferences?.edit()
-//        editor?.remove("timerTimestamp")
-//        editor?.remove("timerIsRunning")
-//        editor?.commit()
-//
-//        val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
-//        startActivity(timeEntryActivity)
+        this.timer.cancel()
+        this.timerIsRunning = false
+        this.timerSum = (this.seconds * 1000 + (this.minutes * 60000) + (this.hours * 3600000)).toLong()
+        this.normalizePreferences()
+
+        val timeEntryActivity = Intent(this, TimeEntryActivity::class.java)
+        timeEntryActivity.putExtra("hours", this.hours)
+        timeEntryActivity.putExtra("minutes", this.minutes)
+
+        startActivity(timeEntryActivity)
+    }
+
+    fun resetTimer(v: View) {
+        this.timer.cancel()
+        this.timerIsRunning = false
+        this.timerTimestamp = 0L
+        this.timerSum = 0L
+        this.hours = 0
+        this.minutes = 0
+        this.seconds = 0
+        this.convertAndPutOnView()
+        this.normalizePreferences()
     }
 
     fun addSecond() {
@@ -200,7 +215,6 @@ class TimerActivity : AppCompatActivity() {
         editor.putLong("timerTimestamp", this.timerTimestamp)
         editor.putBoolean("timerIsRunning", this.timerIsRunning)
         editor.putLong("timerSum", this.timerSum)
-
 
         editor.commit()
     }

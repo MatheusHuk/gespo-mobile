@@ -6,10 +6,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.content.*
 import android.os.IBinder
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.bandtec.gespo.services.CounterService
@@ -20,6 +18,8 @@ import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_counter.*
 import kotlin.math.truncate
+import kotlinx.android.synthetic.main.activity_counter.loading
+import kotlinx.android.synthetic.main.activity_counter.tv_username
 
 class CounterActivity : AppCompatActivity(){
 
@@ -57,7 +57,7 @@ class CounterActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Cria a intância
+        // Cria a instância
         inst = this
 
         setContentView(R.layout.activity_counter)
@@ -67,6 +67,8 @@ class CounterActivity : AppCompatActivity(){
         id = preferences?.getInt("id", 0)!!.toInt()
         name = preferences?.getString("username", "").toString()
         cookie = preferences?.getString("cookie", "").toString()
+
+        tv_username.text = name
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.selectedItemId = R.id.navigation_timer
@@ -113,7 +115,6 @@ class CounterActivity : AppCompatActivity(){
         val loginActivity = Intent(this, LoginActivity::class.java)
         startActivity(loginActivity)
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -278,7 +279,7 @@ class CounterActivity : AppCompatActivity(){
         val secondsThread: Int = this.CounterSvcController.getCounterTimer()
 
         this.convertSecondsToStringTimerAndPutInView(secondsThread)
-        
+
     }
 
 }
