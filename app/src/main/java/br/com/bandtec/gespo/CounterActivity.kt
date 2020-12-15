@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.content.*
 import android.os.IBinder
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,9 +18,15 @@ import br.com.bandtec.gespo.services.listeners.CounterListener
 import br.com.bandtec.gespo.utils.changeActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_counter.*
+import kotlinx.android.synthetic.main.activity_counter.cl_tela_inteira
 import kotlin.math.truncate
 import kotlinx.android.synthetic.main.activity_counter.loading
+import kotlinx.android.synthetic.main.activity_counter.sp_options
+import kotlinx.android.synthetic.main.activity_counter.tv_hours
+import kotlinx.android.synthetic.main.activity_counter.tv_minutes
+import kotlinx.android.synthetic.main.activity_counter.tv_seconds
 import kotlinx.android.synthetic.main.activity_counter.tv_username
+import kotlinx.android.synthetic.main.activity_timer.*
 
 class CounterActivity : AppCompatActivity() {
 
@@ -86,6 +93,26 @@ class CounterActivity : AppCompatActivity() {
                 changeActivity(item, this.applicationContext)
                 return@OnNavigationItemSelectedListener true
             })
+
+        sp_options.setOnItemSelectedListener(
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if(id.equals(1L)){
+                        val intent = Intent(applicationContext, TimerActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+            }
+        )
 
         // BIND!! Serve para termos o objeto CONTROLLER do serviço (E poder recuperar os valores)
         this.bindCounterService()

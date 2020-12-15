@@ -238,14 +238,15 @@
 
             <ImageView
                 android:id="@+id/iv_gespo_line"
-                android:layout_width="370dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:src="@mipmap/line"
-                app:layout_constraintTop_toBottomOf="@id/sp_options"
                 app:layout_editor_absoluteX="20dp"
-                tools:ignore="MissingConstraints,NotSibling"
-                tools:layout_editor_absoluteX="20dp" />
+                android:src="@mipmap/line"
+                app:layout_constraintTop_toBottomOf="@id/iv_gespo_timer"
+                android:contentDescription="A linha vertical"
+                tools:ignore="MissingConstraints"
+                />
 
             <!-- button filter -->
 
@@ -255,25 +256,24 @@
                 android:id="@+id/iv_gespo_timer"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="8dp"
-                android:contentDescription="icon of clock"
+                android:layout_marginTop="21dp"
                 android:src="@drawable/ic_alarm"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_editor_absoluteX="100dp" />
+                app:layout_constraintRight_toLeftOf="@+id/sp_options"
+                app:layout_constraintBottom_toBottomOf="@id/sp_options"
+                android:contentDescription="icon of clock"
+                tools:ignore="MissingConstraints"
+                />
 
             <Spinner
-                android:id="@+id/sp_options"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
+                android:id="@+id/sp_options"
                 android:entries="@array/options"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.132"
-                app:layout_constraintStart_toEndOf="@+id/iv_gespo_timer"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="18dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
