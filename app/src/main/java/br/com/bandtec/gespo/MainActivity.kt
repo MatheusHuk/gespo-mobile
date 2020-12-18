@@ -90,7 +90,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<Employee>, response: Response<Employee>) {
-                //Toast.makeText(applicationContext, "code: ${response.code()}", Toast.LENGTH_SHORT).show()
                 val permission = response.body()?.office?.permission?.id
 
                 if(permission === 1){
@@ -103,7 +102,6 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }else{
-                    //Toast.makeText(applicationContext, "IS NOT MANAGER", Toast.LENGTH_SHORT).show()
                     mountEmployeeDashOne(){ resp ->
                         mountEmployeeDashTwo(){ resp ->
                             mountEmployeeDashThree(){ resp ->
@@ -360,7 +358,6 @@ class MainActivity : AppCompatActivity() {
     fun mountEmployeeDashOne(callback: (Boolean) -> Unit){
 
         //Manager First Dash
-        Toast.makeText(applicationContext, "O: $name", Toast.LENGTH_SHORT).show()
         val query =
                 "{\"measures\":[\"EmployeeMetrics.totalHoursWork\"],\"timeDimensions\":[],\"dimensions\":[\"Project.name\"],\"filters\":[{\"dimension\":\"Employee.name\",\"operator\":\"equals\",\"values\":[\"$name\"]}]}"
         val getFirstDash = dashRequest.getEmployeeDashOne(query)

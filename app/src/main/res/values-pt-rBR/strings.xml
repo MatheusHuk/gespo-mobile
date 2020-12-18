@@ -13,8 +13,9 @@
     <string name="details">Detalhes</string>
     <string name="hours">Horas</string>
     <string name="actions">Ações</string>
-    <string name="hours_total">Total de horas</string>
+    <string name="hours_total">Total de horas:</string>
     <string name="Cpf">CPF</string>
     <string name="password">Senha</string>
     <string name="login">Login</string>
+    <string name="clear">Limpar</string>
 </resources>

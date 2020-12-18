@@ -1,190 +1,299 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Menu de cima -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
         android:id="@+id/v_top_menu"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:background="@color/primaryLightGrey"
         tools:ignore="MissingConstraints">
 
-
-        <!-- logo gespo -->
         <ImageView
-            android:id="@+id/iv_gespo_logo"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:src="@mipmap/gespo"
-            tools:layout_editor_absoluteX="10dp"
-            tools:layout_editor_absoluteY="18dp" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- button power -->
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/primaryLightGrey"
             android:src="@drawable/ic_logout"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"/>
+            android:onClick="logOff"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- contador -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:id="@+id/contador"
-            android:text="00:00:00"
-            android:textColor="#2E6CA4"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
-            android:layout_marginTop="200dp"
-            android:gravity="center"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="55dp">
 
-        <!-- BOTAO ESQ -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fab_play"
-            app:layout_constraintTop_toBottomOf="@id/contador"
-            android:src="@drawable/ic_start"
-            app:fabSize="mini"
-            android:backgroundTint="#2E6CA4"
-            app:layout_editor_absoluteX="115dp"
-            android:layout_marginTop="10dp"
-            tools:ignore="MissingConstraints" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:id="@+id/loading"
+            android:elevation="100dp"
+            android:visibility="gone">
 
-        <!-- BOTAO MEIO -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fab_pause"
-            app:layout_constraintTop_toBottomOf="@id/contador"
-            android:src="@drawable/ic_pause"
-            app:fabSize="mini"
-            android:backgroundTint="#2E6CA4"
-            app:layout_editor_absoluteX="187dp"
-            android:layout_marginTop="10dp"
-            tools:ignore="MissingConstraints" />
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:src="@mipmap/ring"
+                android:id="@+id/loadingImage"/>
 
-        <!-- BOTAO DIREITA -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fab_stop"
-            app:layout_constraintTop_toBottomOf="@id/contador"
-            android:src="@drawable/ic_stop"
-            app:fabSize="mini"
-            android:backgroundTint="#2E6CA4"
-            app:layout_editor_absoluteX="258dp"
-            android:layout_marginTop="10dp"
-            tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Menu de baixo -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_tela_inteira"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="0dp">
 
-            app:itemBackground="@color/primaryLightGrey"
-            app:itemIconTint="@color/item_color_selector"
-            app:itemTextColor="@color/item_color_selector"
-            android:id="@+id/nav_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_display_numbers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
-    <!-- text help -->
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fab_pause"
-            android:hint="AJUDA: Em caso e dúvidas de uso, clique Aqui"
-            />
+                <TextView
+                    android:id="@+id/tv_seconds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="185dp"
+                    android:layout_marginEnd="75dp"
+                    android:text="00"
+                    android:theme="@style/AppTheme.Timer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <!--icon relogio -->
-        <ImageView
-            android:id="@+id/iv_gespo_timer"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="21dp"
-            app:layout_editor_absoluteX="100dp"
-            android:src="@drawable/ic_alarm"
-            app:layout_constraintTop_toBottomOf="@id/v_top_menu"
-            android:contentDescription="icon of clock"
-            tools:ignore="MissingConstraints"
-            />
+                <TextView
+                    android:id="@+id/tv_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="75dp"
+                    android:layout_marginTop="185dp"
+                    android:text="00"
+                    android:theme="@style/AppTheme.Timer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- title page Spinner -->
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/sp_options"
-            android:entries="@array/options"
-            app:layout_constraintTop_toBottomOf="@id/v_top_menu"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="18dp"/>
+                <TextView
+                    android:id="@+id/tv_minutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="185dp"
+                    android:text="00"
+                    android:theme="@style/AppTheme.Timer"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_seconds"
+                    app:layout_constraintStart_toEndOf="@+id/tv_hours"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- button filter -->
-        <ImageButton
-            android:id="@+id/iv_gespo_config"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="110dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginRight="40dp"
-            android:onClick="abrirFiltro"
-            android:src="@mipmap/config"
-            app:layout_constraintTop_toBottomOf="@id/v_top_menu"
-            tools:ignore="MissingConstraints"
-            />
 
-        <!-- line -->
-        <ImageView
-            android:id="@+id/iv_gespo_line"
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            app:layout_editor_absoluteX="20dp"
-            android:src="@mipmap/line"
-            app:layout_constraintTop_toBottomOf="@id/sp_options"
-            tools:ignore="MissingConstraints"
-            />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Menu de baixo -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+            <NumberPicker
+                android:id="@+id/np_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="128dp"
+                android:descendantFocusability="blocksDescendants"
+                android:theme="@style/AppTheme.Timer"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            app:itemBackground="@color/primaryLightGrey"
-            app:itemIconTint="@color/item_color_selector"
-            app:itemTextColor="@color/item_color_selector"
-            android:id="@+id/nav_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu"
-            tools:ignore="DuplicateIds" />
+            <NumberPicker
+                android:id="@+id/np_minutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="128dp"
+                android:descendantFocusability="blocksDescendants"
+                android:theme="@style/AppTheme.Timer"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@+id/np_seconds"
+                app:layout_constraintStart_toEndOf="@+id/np_hours"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <NumberPicker
+                android:id="@+id/np_seconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="128dp"
+                android:layout_marginEnd="70dp"
+                android:descendantFocusability="blocksDescendants"
+                android:theme="@style/AppTheme.Timer"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_separator1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="180dp"
+                android:gravity="center"
+                android:text=":"
+                android:textColor="#2E6CA4"
+                android:textSize="50sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toLeftOf="@id/np_minutes"
+                app:layout_constraintStart_toEndOf="@+id/np_hours"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_separator2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="180dp"
+                android:gravity="center"
+                android:text=":"
+                android:textColor="#2E6CA4"
+                android:textSize="50sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toLeftOf="@id/np_seconds"
+                app:layout_constraintStart_toEndOf="@+id/np_minutes"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fab_play"
+                android:src="@drawable/ic_start"
+                app:fabSize="normal"
+                android:backgroundTint="#2E6CA4"
+                tools:ignore="MissingConstraints"
+                android:onClick="start"
+                android:layout_marginTop="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="@id/fab_pause"
+                app:layout_constraintTop_toBottomOf="@id/np_hours"
+                android:visibility="visible"/>
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="80dp"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/button_zerar"
+                android:onClick="stop"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fab_play"
+                tools:ignore="MissingConstraints" />
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="80dp"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/button_finalizar"
+                android:onClick="finish"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fab_pause"
+                />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fab_pause"
+                android:src="@drawable/ic_pause"
+                app:fabSize="normal"
+                android:backgroundTint="#2E6CA4"
+                tools:ignore="MissingConstraints"
+                android:onClick="pause"
+                android:layout_marginTop="20dp"
+                app:layout_constraintLeft_toLeftOf="@id/fab_play"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/np_seconds"
+                android:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/iv_gespo_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                app:layout_editor_absoluteX="20dp"
+                android:src="@mipmap/line"
+                app:layout_constraintTop_toBottomOf="@id/iv_gespo_timer"
+                android:contentDescription="A linha vertical"
+                tools:ignore="MissingConstraints"
+                />
+
+            <!-- button filter -->
+
+            <!-- line -->
+
+            <ImageView
+                android:id="@+id/iv_gespo_timer"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="21dp"
+                android:src="@drawable/ic_alarm"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/sp_options"
+                app:layout_constraintBottom_toBottomOf="@id/sp_options"
+                android:contentDescription="icon of clock"
+                tools:ignore="MissingConstraints"
+                />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/sp_options"
+                android:entries="@array/options"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="18dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+
+        app:itemBackground="@color/primaryLightGrey"
+        app:itemIconTint="@color/item_color_selector"
+        app:itemTextColor="@color/item_color_selector"
+        android:id="@id/nav_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu"
+        tools:ignore="DuplicateIds" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

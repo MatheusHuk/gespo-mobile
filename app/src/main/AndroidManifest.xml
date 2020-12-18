@@ -3,6 +3,7 @@
     package="br.com.bandtec.gespo">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,7 +21,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/">
+            android:label="MainActivity">
         </activity>
         <activity
             android:name=".TimesheetConsultActivity"
@@ -37,10 +38,15 @@
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".services.CounterService" android:label=".services.CounterService" android:exported="false" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="GESPO_COUNTER_SERVICE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
