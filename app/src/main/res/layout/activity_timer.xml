@@ -97,7 +97,7 @@
 
     <ImageView
         android:id="@+id/iv_gespo_line"
-        android:layout_width="370dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         app:layout_editor_absoluteX="20dp"
@@ -110,66 +110,118 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/cronometro"
-        android:text="00:00:00"
+        app:layout_constraintRight_toLeftOf="@id/tv_separator1"
+        android:id="@+id/tv_hours"
+        android:text="00"
         android:textColor="#2E6CA4"
         android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
         android:layout_marginTop="200dp"
-        android:gravity="center"/>
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_separator1"
+        app:layout_constraintRight_toLeftOf="@id/tv_minutes"
+        android:text=":"
+        android:textColor="#2E6CA4"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        android:layout_marginTop="200dp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/tv_minutes"
+        android:text="00"
+        android:textColor="#2E6CA4"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        android:layout_marginTop="200dp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_separator2"
+        app:layout_constraintLeft_toRightOf="@id/tv_minutes"
+        android:text=":"
+        android:textColor="#2E6CA4"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        android:layout_marginTop="200dp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/tv_separator2"
+        android:id="@+id/tv_seconds"
+        android:text="00"
+        android:textColor="#2E6CA4"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_gespo_line"
+        android:layout_marginTop="200dp"
+        android:gravity="center" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fab_play"
-        app:layout_constraintTop_toBottomOf="@id/cronometro"
         android:src="@drawable/ic_start"
-        app:fabSize="mini"
+        app:fabSize="normal"
         android:backgroundTint="#2E6CA4"
+        tools:ignore="MissingConstraints"
+        android:onClick="startTimer"
+        android:layout_marginTop="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="10dp"
+        app:layout_constraintRight_toRightOf="@id/fab_pause"
+        app:layout_constraintTop_toBottomOf="@id/tv_minutes"
+        android:visibility="visible"/>
+
+    <ImageButton
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:background="@android:color/transparent"
+        android:src="@mipmap/button_zerar"
+        android:onClick="resetTimer"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fab_play"
         tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:background="@android:color/transparent"
+        android:src="@mipmap/button_finalizar"
+        android:onClick="stopTimer"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fab_pause"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fab_pause"
-        app:layout_constraintTop_toBottomOf="@id/cronometro"
         android:src="@drawable/ic_pause"
-        app:fabSize="mini"
+        app:fabSize="normal"
         android:backgroundTint="#2E6CA4"
-        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="MissingConstraints"
+        android:onClick="pauseTimer"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="@id/fab_play"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="10dp"
-        tools:ignore="MissingConstraints" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fab_stop"
-        app:layout_constraintTop_toBottomOf="@id/cronometro"
-        android:src="@drawable/ic_stop"
-        app:fabSize="mini"
-        android:backgroundTint="#2E6CA4"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="120dp"
-        android:layout_marginTop="10dp"
-        tools:ignore="MissingConstraints" />
-
-    <!-- text help -->
-    <TextView
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fab_pause"
-        android:hint="AJUDA: Em caso e dúvidas de uso, clique Aqui"
-        />
+        app:layout_constraintTop_toBottomOf="@id/tv_minutes"
+        android:visibility="visible"/>
 
     <!--icon relogio -->
     <ImageView
@@ -185,6 +237,8 @@
         tools:ignore="MissingConstraints"
         />
 
+
+
     <!-- title page Spinner -->
 
     <Spinner
@@ -196,20 +250,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="18dp"/>
-
-    <!-- button filter -->
-    <ImageButton
-        android:id="@+id/iv_gespo_config"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="40dp"
-        android:onClick="abrirFiltro"
-        android:src="@mipmap/config"
-        tools:ignore="MissingConstraints"
-        />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

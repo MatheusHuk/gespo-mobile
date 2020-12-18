@@ -208,6 +208,7 @@
 
         <EditText
             android:id="@+id/et_data"
+            android:inputType="number"
             android:layout_width="150dp"
             android:layout_height="25dp"
             app:layout_constraintTop_toTopOf="@id/tv_texto_data"
@@ -217,15 +218,28 @@
             android:background="#FFFFFF" />
 
         <Spinner
-            android:id="@+id/sp_projeto"
             android:layout_width="150dp"
             android:layout_height="25dp"
-            android:spinnerMode="dropdown"
+            android:id="@+id/sp_projeto"
             app:layout_constraintTop_toTopOf="@id/tv_texto_projeto"
-            android:layout_marginTop="25dp"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginEnd="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="25dp"
             android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/clear"
+            android:textColor="#FFFFFF"
+            android:background="#2B47AA"
+            app:layout_constraintTop_toBottomOf="@id/sp_projeto"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="25dp"
+            android:onClick="clearFilter"
+            />
 
         <Button
             android:id="@+id/iv_filtro"
@@ -245,7 +259,7 @@
 
     <ImageView
         android:id="@+id/iv_gespo_line"
-        android:layout_width="370dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         app:layout_editor_absoluteX="20dp"
@@ -270,7 +284,7 @@
         android:id="@+id/tv_txt_detalhes"
         />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="400dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -375,7 +389,7 @@
 
         </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -387,22 +401,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:id="@+id/tv_qtd_hora_total_texto"
                 android:textColor="#FFFFFF"
-                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:layout_marginLeft="15dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="215dp"
                 android:text="@string/hours_total"/>
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:textColor="#FFFFFF"
-                android:layout_marginTop="20dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="290dp"
+                app:layout_constraintRight_toRightOf="parent"
                 android:text="0.0"
                 android:textStyle="bold"
                 android:textAlignment="center"
+                android:gravity="center"
+                android:layout_marginRight="15dp"
+                android:textSize="25sp"
                 android:id="@+id/tv_qtd_hora_total"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
